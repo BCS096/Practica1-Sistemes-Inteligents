@@ -28,7 +28,8 @@ public class Board extends JPanel{
     public Board (int ancho, int alto, data datos,elevator asc,ArrayList pet){
         this.pet = pet;
         ascensor = asc;
-        ascensor.x = 125;
+        ascensor.x1 = 125;
+        ascensor.x2 = 125 + 125/2;
         this.tamañoPorPiso = alto / PISOS;
         ascensor.y = alto - tamañoPorPiso;
         this.datos = datos;
@@ -46,6 +47,16 @@ public class Board extends JPanel{
     }    
     @Override
     public void paint(Graphics g) {
+        
+        g.setColor(Color.yellow);
+        g.fillRect(125, 0, 125, alto);
+        ascensor.paint(g);
+        g.setColor(Color.red);
+        g.fillRect(ascensor.x1, ascensor.y, 125/2 - ascensor.restador, tamañoPorPiso);
+        g.fillRect(ascensor.x2, ascensor.y, 125/2 + 1, tamañoPorPiso);
+        g.setColor(Color.black);
+        g.drawRect(ascensor.x1, ascensor.y, 125/2 - ascensor.restador, tamañoPorPiso);
+        g.drawRect(ascensor.x2, ascensor.y, 125/2 + 1, tamañoPorPiso);
         g.setColor(Color.green);
         g.fillRect(50, 0, 75, alto);
         g.fillRect(250, 0, 75, alto);
@@ -58,11 +69,5 @@ public class Board extends JPanel{
             datos.botonesbajada[i].paint(g);
             datos.botonessubida[i].paint(g);
         }
-        g.setColor(Color.yellow);
-        g.fillRect(125, 0, 125, alto);
-        g.setColor(Color.red);
-        g.fillRect(125, ascensor.y, 125, tamañoPorPiso);
-        g.setColor(Color.black);
-        g.drawLine(125+125/2, ascensor.y, 125+125/2, ascensor.y + tamañoPorPiso);
     }
 }

@@ -46,7 +46,7 @@ public class Ascensor {
                         aux.activado = false;
                         aux = null;
                         peticiones.remove(0); //lo borramos
-                        simulacioAturada();
+                        simulacioAturada(ascensor,view);
                     }
                 }
 
@@ -55,20 +55,34 @@ public class Ascensor {
         }
     }
 
-    public static void simulacioAturada() throws InterruptedException{
-        Thread.sleep(600);
+    public static void simulacioAturada(elevator asc,View v) throws InterruptedException{
+        for (int i = 0; i < 125/2; i++) {
+          asc.x2++;
+          asc.restador++;  
+          Thread.sleep(50);
+          v.repaint();
+        }   
+        Thread.sleep(1000);
+        for (int i = 0; i < 125/2; i++) {
+          asc.x2--;
+          asc.restador--;  
+          Thread.sleep(50);
+          v.repaint();
+        }  
     }
     public static void moverAscensor(elevator asc, Button piso) {
         if (asc.estat == estado.BAJAR) {
             asc.y++;
-            if (asc.y > 600 - (600 / 4 * (piso.numPiso + 1))) {
+            asc.rec.y = asc.y;
+            if (asc.y >= 600 - (600 / 4 * (piso.numPiso + 1))) {
                 pensar = true;
                 asc.pisoActual = piso.numPiso;
             }
         }
         if (asc.estat == estado.SUBIR) {
             asc.y--;
-            if (asc.y < 600 - (600 / 4 * (piso.numPiso + 1))) {
+            asc.rec.y = asc.y;
+            if (asc.y <= 600 - (600 / 4 * (piso.numPiso + 1))) {
                 pensar = true;
                 asc.pisoActual = piso.numPiso;
             }
