@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 /**
  *
- * @author tomeu
+ * @author tomeu, emanuel
  */
-public class Ascensor {
+public class Ascensor implements Constantes{
 
     /**
      * @param args the command line arguments
@@ -18,13 +18,14 @@ public class Ascensor {
     public enum estado {
         SUBIR, BAJAR, STOP
     }
+    
     static boolean pensar = true;
 
     public static void main(String[] args) throws InterruptedException {
         data datos = new data();
         elevator ascensor = new elevator();
         ArrayList<Button> peticiones = new ArrayList();
-        View view = new View(800, 600, datos, ascensor, peticiones);
+        View view = new View(datos, ascensor, peticiones);
 
         Button aux = null;
         while (true) {
@@ -56,14 +57,14 @@ public class Ascensor {
     }
 
     public static void simulacioAturada(elevator asc,View v) throws InterruptedException{
-        for (int i = 0; i < 125/2; i++) {
+        for (int i = 0; i < asc.ANCHO_ASCENSOR/2; i++) {
           asc.x2++;
           asc.restador++;  
           Thread.sleep(50);
           v.repaint();
         }   
         Thread.sleep(1000);
-        for (int i = 0; i < 125/2; i++) {
+        for (int i = 0; i < asc.ANCHO_ASCENSOR/2; i++) {
           asc.x2--;
           asc.restador--;  
           Thread.sleep(50);
@@ -74,7 +75,7 @@ public class Ascensor {
         if (asc.estat == estado.BAJAR) {
             asc.y++;
             asc.rec.y = asc.y;
-            if (asc.y >= 600 - (600 / 4 * (piso.numPiso + 1))) {
+            if (asc.y >= ALTO - (ALTO / PISOS * (piso.numPiso + 1))) {
                 pensar = true;
                 asc.pisoActual = piso.numPiso;
             }
@@ -82,7 +83,7 @@ public class Ascensor {
         if (asc.estat == estado.SUBIR) {
             asc.y--;
             asc.rec.y = asc.y;
-            if (asc.y <= 600 - (600 / 4 * (piso.numPiso + 1))) {
+            if (asc.y <= ALTO - (ALTO / PISOS * (piso.numPiso + 1))) {
                 pensar = true;
                 asc.pisoActual = piso.numPiso;
             }

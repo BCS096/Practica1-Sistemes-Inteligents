@@ -13,16 +13,17 @@ import javax.swing.ImageIcon;
 
 /**
  *
- * @author tomeu
+ * @author tomeu, emanuel
  */
-public class elevator implements java.io.Serializable{
+public class elevator implements java.io.Serializable,Constantes{
     public int x1;
     public int x2;
     public int y;
     public int restador = 0;
     public estado estat = estado.STOP;
     public int pisoActual = 0;
-    public Rectangle2D.Float rec = new Rectangle2D.Float(125, 600 - 600/4, 125, 600/4);
+    public final int ANCHO_ASCENSOR = 125;
+    public Rectangle2D.Float rec = new Rectangle2D.Float(ANCHO_ASCENSOR, ALTO - ALTO/PISOS, ANCHO_ASCENSOR, ALTO/PISOS);
     Image image;
     
     
@@ -32,8 +33,8 @@ public class elevator implements java.io.Serializable{
     }
     
     private ImageIcon redimensionarImagen(ImageIcon imagen) {
-        Image imgEscalada = imagen.getImage().getScaledInstance(125,
-            600/4, java.awt.Image.SCALE_DEFAULT);
+        Image imgEscalada = imagen.getImage().getScaledInstance(ANCHO_ASCENSOR,
+            ALTO/PISOS, java.awt.Image.SCALE_DEFAULT);
         return new ImageIcon(imgEscalada); 
     }
     public void paint(Graphics g){

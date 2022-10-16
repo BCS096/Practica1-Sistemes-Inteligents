@@ -12,23 +12,23 @@ import javax.swing.JFrame;
 
 /**
  *
- * @author tomeu
+ * @author tomeu, emanuel
  */
-public class View  extends JFrame implements MouseListener{
+public class View  extends JFrame implements MouseListener,Constantes{
     Board board;
     data datos;
     elevator ascensor;
     ArrayList pet;
-    public View (int width, int height,data datos,elevator asc,ArrayList pet){
+    public View (data datos,elevator asc,ArrayList pet){
         this.pet = pet;
         this.datos = datos;
         ascensor = asc;
         this.setTitle("ASCENSOR");
-        setSize(width, height + 50);
+        setSize(ANCHO, ALTO + 50);
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
-        board = new Board(width, height,datos,asc,pet);
+        board = new Board(datos,asc,pet);
         board.addMouseListener(this);
         add(board);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,14 +52,14 @@ public class View  extends JFrame implements MouseListener{
             boolean trobat = false;
             boolean bajada = false;
             int i;
-            for (i = 0; i < 3 && !trobat; i++) {
+            for (i = 0; i < PISOS - 1 && !trobat; i++) {
                 trobat = datos.botonesbajada[i].rec.contains(x, y);
                 if(trobat){
                     bajada = true;
                     break;
                 }
             }
-            for (int j = 0; j < 3 && !trobat; j++) {
+            for (int j = 0; j < PISOS - 1 && !trobat; j++) {
                 trobat = datos.botonessubida[j].rec.contains(x, y);
                 if(trobat){
                     bajada = false;
@@ -70,14 +70,12 @@ public class View  extends JFrame implements MouseListener{
             if(trobat){
                 if(bajada){
                     if(!pet.contains(datos.botonesbajada[i])){
-                        System.out.println("lo meto");
                         pet.add(datos.botonesbajada[i]);
                         datos.botonesbajada[i].activado = true;
                     }
                     
                 }else{
                     if(!pet.contains(datos.botonessubida[i])){
-                        System.out.println("lo meto");
                         pet.add(datos.botonessubida[i]);
                         datos.botonessubida[i].activado = true;
                     } 

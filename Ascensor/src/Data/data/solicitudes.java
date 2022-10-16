@@ -4,13 +4,12 @@
  */
 package Data.data;
 
-import ascensor.Button;
-
 /**
  *
  * @author tomeu, emanuel
  */
-public class data {
-    public Button [] botonessubida = new Button[3];
-    public Button [] botonesbajada = new Button[3];
+public class solicitudes {
+    //aqui se implementarán los métodos sig(),pre() y como atributo serà un array de objetos
+    //basicamente lo que habra en la clase datos, en vez de los array de buttons serán objetos 
+    //solicitudes
 }

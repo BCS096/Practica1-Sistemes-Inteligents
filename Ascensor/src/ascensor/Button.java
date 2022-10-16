@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
 
 /**
  *
- * @author tomeu
+ * @author tomeu, emanuel
  */
 public class Button implements java.io.Serializable{
     Image botonVerde;
