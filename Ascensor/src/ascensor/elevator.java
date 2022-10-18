@@ -20,7 +20,7 @@ public class elevator implements java.io.Serializable,Constantes{
     public int x2;
     public int y;
     public int restador = 0;
-    public estado estat = estado.STOP;
+    public estado estat = estado.SUBIR;
     public int pisoActual = 0;
     public final int ANCHO_ASCENSOR = 125;
     public Rectangle2D.Float rec = new Rectangle2D.Float(ANCHO_ASCENSOR, ALTO - ALTO/PISOS, ANCHO_ASCENSOR, ALTO/PISOS);

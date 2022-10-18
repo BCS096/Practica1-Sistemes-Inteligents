@@ -31,7 +31,7 @@ public class solicitudes implements Constantes{
     }
     
     public int pre(int pisoActual){
-        for (int i = pisoActual - 1; i <= 0; i--) {
+        for (int i = pisoActual - 1; i >= 0; i--) {
             if(solicitudes[i].activado){
                 return i;
             }

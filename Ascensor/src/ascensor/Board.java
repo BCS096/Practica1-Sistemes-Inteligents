@@ -29,13 +29,11 @@ public class Board extends JPanel implements Constantes{
         ascensor.y = ALTO - tamañoPorPiso;
         this.datos = datos;
         this.setSize(ANCHO, ALTO);
-
-        //boton de arriba
         datos.botonesBajada.solicitudes[2] = new Button(new Rectangle2D.Float(100,tamañoPorPiso - 20, 20, 20), 3,"boton verde.jpg","boton rojo.jpg");
         datos.botonesBajada.solicitudes[1] = new Button(new Rectangle2D.Float(100,tamañoPorPiso * 2 - 20, 20, 20), 2,"boton verde.jpg","boton rojo.jpg");
         datos.botonesBajada.solicitudes[0] = new Button(new Rectangle2D.Float(100,tamañoPorPiso * 3 - 20, 20, 20), 1,"boton verde.jpg","boton rojo.jpg");
-        datos.botonesSubida.solicitudes[2] = new Button(new Rectangle2D.Float(100 + 200,tamañoPorPiso * 2 - 20, 20, 20), 2,"boton verde.jpg","boton rojo.jpg");
-        datos.botonesSubida.solicitudes[1] = new Button(new Rectangle2D.Float(100 + 200,tamañoPorPiso * 3 - 20, 20, 20),1,"boton verde.jpg","boton rojo.jpg");
+        datos.botonesSubida.solicitudes[2] = new Button(new Rectangle2D.Float(300,tamañoPorPiso * 2 - 20, 20, 20), 2,"boton verde.jpg","boton rojo.jpg");
+        datos.botonesSubida.solicitudes[1] = new Button(new Rectangle2D.Float(300,tamañoPorPiso * 3 - 20, 20, 20),1,"boton verde.jpg","boton rojo.jpg");
         datos.botonesSubida.solicitudes[0] = new Button(new Rectangle2D.Float(300, ALTO - 20, 20, 20),0,"boton verde.jpg","boton rojo.jpg");
     }    
     @Override

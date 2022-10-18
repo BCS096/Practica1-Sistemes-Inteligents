@@ -78,13 +78,11 @@ public class View  extends JFrame implements MouseListener,Constantes{
             if(trobat){
                 if(bajada){
                     if(!pet.contains(datos.botonesBajada.solicitudes[i])){
-                        pet.add(datos.botonesBajada.solicitudes[i]);
                         datos.botonesBajada.solicitudes[i].activado = true;
                     }
                     
                 }else{
                     if(!pet.contains(datos.botonesSubida.solicitudes[i])){
-                        pet.add(datos.botonesSubida.solicitudes[i]);
                         datos.botonesSubida.solicitudes[i].activado = true;
                     } 
                 }
@@ -99,7 +97,6 @@ public class View  extends JFrame implements MouseListener,Constantes{
                 }
                 if(trobat){
                     datos.botonesPanel.solicitudes[j].activado = true;
-                    pet.add(datos.botonesPanel.solicitudes[j]);
                 }
             }
         }
