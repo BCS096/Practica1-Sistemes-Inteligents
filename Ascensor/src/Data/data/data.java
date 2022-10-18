@@ -5,12 +5,14 @@
 package Data.data;
 
 import ascensor.Button;
+import ascensor.Constantes;
 
 /**
  *
  * @author tomeu, emanuel
  */
-public class data {
-    public Button [] botonessubida = new Button[3];
-    public Button [] botonesbajada = new Button[3];
+public class data implements Constantes {
+    public solicitudes botonesSubida = new solicitudes(PISOS - 1);
+    public solicitudes botonesBajada = new solicitudes(PISOS - 1);
+    public solicitudes botonesPanel = new solicitudes(PISOS);
 }

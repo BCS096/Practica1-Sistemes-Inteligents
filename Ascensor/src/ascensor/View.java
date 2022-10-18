@@ -5,6 +5,8 @@
 package ascensor;
 
 import Data.data.data;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import javax.swing.JFrame;
  */
 public class View  extends JFrame implements MouseListener,Constantes{
     Board board;
+    Panel panel;
     data datos;
     elevator ascensor;
     ArrayList pet;
@@ -23,20 +26,25 @@ public class View  extends JFrame implements MouseListener,Constantes{
         this.pet = pet;
         this.datos = datos;
         ascensor = asc;
+        panel = new Panel(datos);
         this.setTitle("ASCENSOR");
         setSize(ANCHO, ALTO + 50);
+        this.setPreferredSize(new Dimension(ANCHO, ALTO + 50));
         setResizable(false);
         setLocationRelativeTo(null);
-        setLayout(null);
+        //setLayout(null);
         board = new Board(datos,asc,pet);
         board.addMouseListener(this);
+        panel.addMouseListener(this);
         add(board);
+        add(panel);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
     public void repintar(){
         board.repaint();
+        panel.repaint();
     }
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -53,14 +61,14 @@ public class View  extends JFrame implements MouseListener,Constantes{
             boolean bajada = false;
             int i;
             for (i = 0; i < PISOS - 1 && !trobat; i++) {
-                trobat = datos.botonesbajada[i].rec.contains(x, y);
+                trobat = datos.botonesBajada.solicitudes[i].rec.contains(x, y);
                 if(trobat){
                     bajada = true;
                     break;
                 }
             }
             for (int j = 0; j < PISOS - 1 && !trobat; j++) {
-                trobat = datos.botonessubida[j].rec.contains(x, y);
+                trobat = datos.botonesSubida.solicitudes[j].rec.contains(x, y);
                 if(trobat){
                     bajada = false;
                     i = j;
@@ -69,16 +77,29 @@ public class View  extends JFrame implements MouseListener,Constantes{
             }
             if(trobat){
                 if(bajada){
-                    if(!pet.contains(datos.botonesbajada[i])){
-                        pet.add(datos.botonesbajada[i]);
-                        datos.botonesbajada[i].activado = true;
+                    if(!pet.contains(datos.botonesBajada.solicitudes[i])){
+                        pet.add(datos.botonesBajada.solicitudes[i]);
+                        datos.botonesBajada.solicitudes[i].activado = true;
                     }
                     
                 }else{
-                    if(!pet.contains(datos.botonessubida[i])){
-                        pet.add(datos.botonessubida[i]);
-                        datos.botonessubida[i].activado = true;
+                    if(!pet.contains(datos.botonesSubida.solicitudes[i])){
+                        pet.add(datos.botonesSubida.solicitudes[i]);
+                        datos.botonesSubida.solicitudes[i].activado = true;
                     } 
+                }
+            }
+            else{ //para panel
+                int j;
+                for (j = 0; j < datos.botonesPanel.solicitudes.length; j++) {
+                    trobat = datos.botonesPanel.solicitudes[j].rec.contains(x, y);
+                    if(trobat){
+                        break;
+                    }
+                }
+                if(trobat){
+                    datos.botonesPanel.solicitudes[j].activado = true;
+                    pet.add(datos.botonesPanel.solicitudes[j]);
                 }
             }
         }

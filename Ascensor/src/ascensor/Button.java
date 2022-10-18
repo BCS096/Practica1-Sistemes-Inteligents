@@ -22,19 +22,19 @@ public class Button implements java.io.Serializable{
     public int numPiso;
     
     
-    public Button (Rectangle2D.Float rec,int num){
+    public Button (Rectangle2D.Float rec,int num, String ima1, String ima2){
         numPiso = num;
         this.rec = rec;
-        ImageIcon img = redimensionarImagen(new ImageIcon("boton verde.jpg"));
+        ImageIcon img = redimensionarImagen(new ImageIcon(ima1));
         botonVerde = img.getImage();
-        img = redimensionarImagen(new ImageIcon("boton rojo.jpg"));
+        img = redimensionarImagen(new ImageIcon(ima2));
         botonRojo = img.getImage();
         activado = false;
     }
     
     private ImageIcon redimensionarImagen(ImageIcon imagen) {
-        Image imgEscalada = imagen.getImage().getScaledInstance(20,
-            20, java.awt.Image.SCALE_DEFAULT);
+        Image imgEscalada = imagen.getImage().getScaledInstance((int)this.rec.height,
+            (int)this.rec.width, java.awt.Image.SCALE_DEFAULT);
         return new ImageIcon(imgEscalada); 
     }
     public void paint(Graphics g){

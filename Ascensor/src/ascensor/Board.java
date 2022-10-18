@@ -31,12 +31,12 @@ public class Board extends JPanel implements Constantes{
         this.setSize(ANCHO, ALTO);
 
         //boton de arriba
-        datos.botonesbajada[2] = new Button(new Rectangle2D.Float(100,tamañoPorPiso - 20, 20, 20), 3);
-        datos.botonesbajada[1] = new Button(new Rectangle2D.Float(100,tamañoPorPiso * 2 - 20, 20, 20), 2);
-        datos.botonesbajada[0] = new Button(new Rectangle2D.Float(100,tamañoPorPiso * 3 - 20, 20, 20), 1);
-        datos.botonessubida[2] = new Button(new Rectangle2D.Float(100 + 200,tamañoPorPiso * 2 - 20, 20, 20), 2);
-        datos.botonessubida[1] = new Button(new Rectangle2D.Float(100 + 200,tamañoPorPiso * 3 - 20, 20, 20),1);
-        datos.botonessubida[0] = new Button(new Rectangle2D.Float(300, ALTO - 20, 20, 20),0);
+        datos.botonesBajada.solicitudes[2] = new Button(new Rectangle2D.Float(100,tamañoPorPiso - 20, 20, 20), 3,"boton verde.jpg","boton rojo.jpg");
+        datos.botonesBajada.solicitudes[1] = new Button(new Rectangle2D.Float(100,tamañoPorPiso * 2 - 20, 20, 20), 2,"boton verde.jpg","boton rojo.jpg");
+        datos.botonesBajada.solicitudes[0] = new Button(new Rectangle2D.Float(100,tamañoPorPiso * 3 - 20, 20, 20), 1,"boton verde.jpg","boton rojo.jpg");
+        datos.botonesSubida.solicitudes[2] = new Button(new Rectangle2D.Float(100 + 200,tamañoPorPiso * 2 - 20, 20, 20), 2,"boton verde.jpg","boton rojo.jpg");
+        datos.botonesSubida.solicitudes[1] = new Button(new Rectangle2D.Float(100 + 200,tamañoPorPiso * 3 - 20, 20, 20),1,"boton verde.jpg","boton rojo.jpg");
+        datos.botonesSubida.solicitudes[0] = new Button(new Rectangle2D.Float(300, ALTO - 20, 20, 20),0,"boton verde.jpg","boton rojo.jpg");
     }    
     @Override
     public void paint(Graphics g) {
@@ -59,8 +59,8 @@ public class Board extends JPanel implements Constantes{
             g.drawLine(250, ALTO - (tamañoPorPiso * (i + 1)),250+75 ,  ALTO - (tamañoPorPiso * (i + 1)));
         }
         for (int i = 0; i < PISOS - 1; i++) {
-            datos.botonesbajada[i].paint(g);
-            datos.botonessubida[i].paint(g);
+            datos.botonesBajada.solicitudes[i].paint(g);
+            datos.botonesSubida.solicitudes[i].paint(g);
         }
     }
 }
