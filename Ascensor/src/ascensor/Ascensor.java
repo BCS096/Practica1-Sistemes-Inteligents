@@ -3,8 +3,10 @@ hacer una cola en que se vayan gestionando las solicitudes de ascensor por FIFO
  */
 package ascensor;
 
-import Data.data.data;
+import Data.data;
 import java.util.ArrayList;
+import Vista.Button;
+import Vista.View;
 
 /**
  *
