@@ -30,7 +30,7 @@ public class Ascensor implements Constantes {
             //aqui iria el algoritmo de la logica del ascensor
             if (!pensar) {
                 moverAscensor(ascensor);
-                Thread.sleep(20);
+                Thread.sleep(ascensor.velocitat);
                 view.repintar();
             } else {
                 if (abrirPuerta(datos,ascensor)) {
@@ -39,14 +39,13 @@ public class Ascensor implements Constantes {
                     if(ascensor.pisoActual != 0){
                         datos.botonesBajada.solicitudes[ascensor.pisoActual - 1].activado = false;
                     }
-                    if(ascensor.pisoActual != 3){
+                    if(ascensor.pisoActual != PISOS - 1){
                         datos.botonesSubida.solicitudes[ascensor.pisoActual].activado = false;
                     }
                 }
                 if (ascensor.estat == estado.SUBIR) {
                     if (datos.botonesSubida.sig(ascensor.pisoActual) != -1 || datos.botonesPanel.sig(ascensor.pisoActual) != -1) {
                         int a = datos.botonesSubida.sig(ascensor.pisoActual);
-                        System.out.println(a);
                         int b = datos.botonesPanel.sig(ascensor.pisoActual);
                         if(a == -1 && b != -1){
                            ascensor.pisoActual = b; 
@@ -91,18 +90,22 @@ public class Ascensor implements Constantes {
     }
 
     public static boolean abrirPuerta(data datos,elevator ascensor){
-        if(ascensor.pisoActual == 0){
-            if(datos.botonesSubida.solicitudes[ascensor.pisoActual].activado || datos.botonesPanel.solicitudes[ascensor.pisoActual].activado){
-                return true;
+        switch (ascensor.pisoActual) {
+            case 0 -> {
+                if(datos.botonesSubida.solicitudes[ascensor.pisoActual].activado || datos.botonesPanel.solicitudes[ascensor.pisoActual].activado){
+                    return true;
+                }
             }
-        }else if(ascensor.pisoActual == 3){
-            if(datos.botonesBajada.solicitudes[ascensor.pisoActual - 1].activado || datos.botonesPanel.solicitudes[ascensor.pisoActual].activado){
-                return true;
+            case PISOS - 1 -> {
+                if(datos.botonesBajada.solicitudes[ascensor.pisoActual - 1].activado || datos.botonesPanel.solicitudes[ascensor.pisoActual].activado){
+                    return true;
+                }
             }
-        }else{
-            if(datos.botonesSubida.solicitudes[ascensor.pisoActual].activado || datos.botonesPanel.solicitudes[ascensor.pisoActual].activado ||
-               datos.botonesBajada.solicitudes[ascensor.pisoActual - 1].activado){
-                return true;
+            default -> {
+                if(datos.botonesSubida.solicitudes[ascensor.pisoActual].activado || datos.botonesPanel.solicitudes[ascensor.pisoActual].activado ||
+                        datos.botonesBajada.solicitudes[ascensor.pisoActual - 1].activado){
+                    return true;
+                }
             }
         }
         return false;
