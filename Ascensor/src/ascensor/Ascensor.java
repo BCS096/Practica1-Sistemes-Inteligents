@@ -7,6 +7,7 @@ import Data.data;
 import java.util.ArrayList;
 import Vista.Button;
 import Vista.View;
+import Vista.elevator;
 
 /**
  *
@@ -26,64 +27,63 @@ public class Ascensor implements Constantes {
     public static void main(String[] args) throws InterruptedException {
         data datos = new data();
         elevator ascensor = new elevator();
-        ArrayList<Button> peticiones = new ArrayList();
-        View view = new View(datos, ascensor, peticiones);
+        View view = new View(datos, ascensor);
         while (true) {
             //aqui iria el algoritmo de la logica del ascensor
             if (!pensar) {
                 moverAscensor(ascensor);
-                Thread.sleep(ascensor.velocitat);
+                Thread.sleep(ascensor.getVelocitat());
                 view.repintar();
             } else {
                 if (abrirPuerta(datos,ascensor)) {
                     simulacioAturada(ascensor, view);
-                    datos.botonesPanel.solicitudes[ascensor.pisoActual].activado = false;
-                    if(ascensor.pisoActual != 0){
-                        datos.botonesBajada.solicitudes[ascensor.pisoActual - 1].activado = false;
+                    datos.botonesPanel.getBoton(ascensor.getPisoActual()).setActivado(false);
+                    if(ascensor.getPisoActual() != 0){
+                        datos.botonesBajada.getBoton(ascensor.getPisoActual() - 1).setActivado(false);
                     }
-                    if(ascensor.pisoActual != PISOS - 1){
-                        datos.botonesSubida.solicitudes[ascensor.pisoActual].activado = false;
+                    if(ascensor.getPisoActual() != PISOS - 1){
+                        datos.botonesSubida.getBoton(ascensor.getPisoActual()).setActivado(false);
                     }
                 }
-                if (ascensor.estat == estado.SUBIR) {
-                    if (datos.botonesSubida.sig(ascensor.pisoActual) != -1 || datos.botonesPanel.sig(ascensor.pisoActual) != -1) {
-                        int a = datos.botonesSubida.sig(ascensor.pisoActual);
-                        int b = datos.botonesPanel.sig(ascensor.pisoActual);
+                if (ascensor.getEstat() == estado.SUBIR) {
+                    if (datos.botonesSubida.sig(ascensor.getPisoActual()) != -1 || datos.botonesPanel.sig(ascensor.getPisoActual()) != -1) {
+                        int a = datos.botonesSubida.sig(ascensor.getPisoActual());
+                        int b = datos.botonesPanel.sig(ascensor.getPisoActual());
                         if(a == -1 && b != -1){
-                           ascensor.pisoActual = b; 
+                           ascensor.setPisoActual(b); 
                         }else if (b == -1 && a != -1){
-                            ascensor.pisoActual = a;
+                            ascensor.setPisoActual(a);
                         }else if (a < b){
-                            ascensor.pisoActual = a;
+                            ascensor.setPisoActual(a);
                         }else{
-                            ascensor.pisoActual = b;
+                            ascensor.setPisoActual(b);
                         }                      
                         pensar = false;
-                    }else if (datos.botonesBajada.sig(ascensor.pisoActual - 1) != -1){
-                        ascensor.pisoActual = datos.botonesBajada.sig(ascensor.pisoActual - 1) + 1;
+                    }else if (datos.botonesBajada.max(ascensor.getPisoActual() - 1) != -1){
+                        ascensor.setPisoActual(datos.botonesBajada.max(ascensor.getPisoActual() - 1) + 1);
                         pensar = false;
                     }else{
-                        ascensor.estat = estado.BAJAR;
+                        ascensor.setEstat(estado.BAJAR);
                     }
                 }else{ // estat == estado.BAJAR
-                    if (datos.botonesBajada.pre(ascensor.pisoActual - 1) != -1 || datos.botonesPanel.pre(ascensor.pisoActual) != -1) {
-                        int a = datos.botonesBajada.pre(ascensor.pisoActual - 1) + 1;
-                        int b = datos.botonesPanel.pre(ascensor.pisoActual);
+                    if (datos.botonesBajada.pre(ascensor.getPisoActual() - 1) != -1 || datos.botonesPanel.pre(ascensor.getPisoActual()) != -1) {
+                        int a = datos.botonesBajada.pre(ascensor.getPisoActual() - 1) + 1;
+                        int b = datos.botonesPanel.pre(ascensor.getPisoActual());
                         if(a == -1 && b != -1){
-                           ascensor.pisoActual = b; 
+                           ascensor.setPisoActual(b);
                         }else if (b == -1 && a != -1){
-                            ascensor.pisoActual = a;
+                            ascensor.setPisoActual(a);
                         }else if (a > b){
-                            ascensor.pisoActual = a;
+                            ascensor.setPisoActual(a);
                         }else{
-                            ascensor.pisoActual = b;
+                            ascensor.setPisoActual(b);
                         }
                         pensar = false;
-                    }else if (datos.botonesSubida.pre(ascensor.pisoActual) != -1){
-                        ascensor.pisoActual = datos.botonesSubida.pre(ascensor.pisoActual);
+                    }else if (datos.botonesSubida.min(ascensor.getPisoActual()) != -1){
+                        ascensor.setPisoActual(datos.botonesSubida.min(ascensor.getPisoActual()));
                         pensar = false;
                     }else{
-                        ascensor.estat = estado.SUBIR;
+                        ascensor.setEstat(estado.SUBIR);
                     }
                 }    
                 view.repintar();
@@ -92,20 +92,20 @@ public class Ascensor implements Constantes {
     }
 
     public static boolean abrirPuerta(data datos,elevator ascensor){
-        switch (ascensor.pisoActual) {
+        switch (ascensor.getPisoActual()) {
             case 0 -> {
-                if(datos.botonesSubida.solicitudes[ascensor.pisoActual].activado || datos.botonesPanel.solicitudes[ascensor.pisoActual].activado){
+                if(datos.botonesSubida.getBoton(ascensor.getPisoActual()).isActivado() || datos.botonesPanel.getBoton(ascensor.getPisoActual()).isActivado()){
                     return true;
                 }
             }
             case PISOS - 1 -> {
-                if(datos.botonesBajada.solicitudes[ascensor.pisoActual - 1].activado || datos.botonesPanel.solicitudes[ascensor.pisoActual].activado){
+                if(datos.botonesBajada.getBoton(ascensor.getPisoActual() - 1).isActivado() || datos.botonesPanel.getBoton(ascensor.getPisoActual()).isActivado()){
                     return true;
                 }
             }
             default -> {
-                if(datos.botonesSubida.solicitudes[ascensor.pisoActual].activado || datos.botonesPanel.solicitudes[ascensor.pisoActual].activado ||
-                        datos.botonesBajada.solicitudes[ascensor.pisoActual - 1].activado){
+                if(datos.botonesSubida.getBoton(ascensor.getPisoActual()).isActivado() || datos.botonesPanel.getBoton(ascensor.getPisoActual()).isActivado() ||
+                        datos.botonesBajada.getBoton(ascensor.getPisoActual() - 1).isActivado()){
                     return true;
                 }
             }
@@ -129,17 +129,17 @@ public class Ascensor implements Constantes {
     }
 
     public static void moverAscensor(elevator asc) throws InterruptedException {
-        if (asc.estat == estado.BAJAR) {
+        if (asc.getEstat() == estado.BAJAR) {
             asc.y++;
-            asc.rec.y = asc.y;
-            if (asc.y >= ALTO - (ALTO / PISOS * (asc.pisoActual + 1))) {
+            asc.getRec().y = asc.y;
+            if (asc.y >= ALTO - (ALTO / PISOS * (asc.getPisoActual() + 1))) {
                 pensar = true;
             }
         }
-        if (asc.estat == estado.SUBIR) {
+        if (asc.getEstat() == estado.SUBIR) {
             asc.y--;
-            asc.rec.y = asc.y;
-            if (asc.y <= ALTO - (ALTO / PISOS * (asc.pisoActual + 1))) {
+            asc.getRec().y = asc.y;
+            if (asc.y <= ALTO - (ALTO / PISOS * (asc.getPisoActual() + 1))) {
                 pensar = true;
             }
         }
