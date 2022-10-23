@@ -36,8 +36,8 @@ public class solicitudes implements Constantes{
         return -1;
     }
     
-    public int max (int pisoActual){
-        for (int i = solicitudes.length - 1; i > pisoActual; i--) {
+    public int max (){
+        for (int i = solicitudes.length - 1; i >= 0; i--) {
             if(solicitudes[i].isActivado()){
                 return i;
             }
@@ -45,8 +45,8 @@ public class solicitudes implements Constantes{
         return -1;
     }
     
-    public int min (int pisoActual){
-        for (int i = 0; i < pisoActual; i++) {
+    public int min (){
+        for (int i = 0; i < solicitudes.length; i++) {
             if(solicitudes[i].isActivado()){
                 return i;
             }

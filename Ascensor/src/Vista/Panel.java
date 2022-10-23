@@ -34,7 +34,7 @@ public class Panel extends JPanel implements Constantes {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(Color.blue);
+        g.setColor(new Color(52, 52, 50));
         g.fillRect(400, 240, 100, 60 * PISOS + 10);
         for (int i = 0; i < datos.botonesPanel.longitud(); i++) {
             datos.botonesPanel.getBoton(i).paint(g);
