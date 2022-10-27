@@ -1,6 +1,4 @@
-/*
-hacer una cola en que se vayan gestionando las solicitudes de ascensor por FIFO
- */
+
 package ascensor;
 
 import Data.data;
