@@ -7,8 +7,11 @@ package Vista;
 import Data.data;
 import ascensor.Constantes;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.geom.Rectangle2D;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
@@ -18,9 +21,10 @@ import javax.swing.JPanel;
 public class Panel extends JPanel implements Constantes {
 
     private data datos;
-
+    
     public Panel(data datos) {
-        this.setSize(10, 10);
+        this.setPreferredSize(new Dimension(10, 10));
+        this.setBounds(400, 240, 100, PISOS * 60 + 10);
         this.datos = datos;
         int aux = 250;
         datos.botonesPanel.setBoton(3,new Button(new Rectangle2D.Float(425, aux, 50, 50), 3,"tres.png","tresR.png"));
@@ -30,11 +34,12 @@ public class Panel extends JPanel implements Constantes {
         datos.botonesPanel.setBoton(1,new Button(new Rectangle2D.Float(425, aux, 50, 50), 1,"uno.png","unoR.png"));
         aux += 60;
         datos.botonesPanel.setBoton(0,new Button(new Rectangle2D.Float(425, aux, 50, 50), 0,"cero.png","ceroR.png"));
+        this.setVisible(true);
     }
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(Color.blue);
+        g.setColor(new Color(52, 52, 50));
         g.fillRect(400, 240, 100, 60 * PISOS + 10);
         for (int i = 0; i < datos.botonesPanel.longitud(); i++) {
             datos.botonesPanel.getBoton(i).paint(g);

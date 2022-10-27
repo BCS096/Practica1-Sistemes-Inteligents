@@ -1,6 +1,4 @@
-/*
-hacer una cola en que se vayan gestionando las solicitudes de ascensor por FIFO
- */
+
 package ascensor;
 
 import Data.data;
@@ -46,41 +44,17 @@ public class Ascensor implements Constantes {
                     }
                 }
                 if (ascensor.getEstat() == estado.SUBIR) {
-                    if (datos.botonesSubida.sig(ascensor.getPisoActual()) != -1 || datos.botonesPanel.sig(ascensor.getPisoActual()) != -1) {
-                        int a = datos.botonesSubida.sig(ascensor.getPisoActual());
-                        int b = datos.botonesPanel.sig(ascensor.getPisoActual());
-                        if(a == -1 && b != -1){
-                           ascensor.setPisoActual(b); 
-                        }else if (b == -1 && a != -1){
-                            ascensor.setPisoActual(a);
-                        }else if (a < b){
-                            ascensor.setPisoActual(a);
-                        }else{
-                            ascensor.setPisoActual(b);
-                        }                      
-                        pensar = false;
-                    }else if (datos.botonesBajada.max(ascensor.getPisoActual() - 1) != -1){
-                        ascensor.setPisoActual(datos.botonesBajada.max(ascensor.getPisoActual() - 1) + 1);
+                    if (datos.botonesSubida.sig(ascensor.getPisoActual()) != -1 || datos.botonesPanel.sig(ascensor.getPisoActual()) != -1 || 
+                            (datos.botonesBajada.max() + 1 > ascensor.getPisoActual() )) {
+                        ascensor.setPisoActual(ascensor.getPisoActual() + 1);
                         pensar = false;
                     }else{
                         ascensor.setEstat(estado.BAJAR);
                     }
                 }else{ // estat == estado.BAJAR
-                    if (datos.botonesBajada.pre(ascensor.getPisoActual() - 1) != -1 || datos.botonesPanel.pre(ascensor.getPisoActual()) != -1) {
-                        int a = datos.botonesBajada.pre(ascensor.getPisoActual() - 1) + 1;
-                        int b = datos.botonesPanel.pre(ascensor.getPisoActual());
-                        if(a == -1 && b != -1){
-                           ascensor.setPisoActual(b);
-                        }else if (b == -1 && a != -1){
-                            ascensor.setPisoActual(a);
-                        }else if (a > b){
-                            ascensor.setPisoActual(a);
-                        }else{
-                            ascensor.setPisoActual(b);
-                        }
-                        pensar = false;
-                    }else if (datos.botonesSubida.min(ascensor.getPisoActual()) != -1){
-                        ascensor.setPisoActual(datos.botonesSubida.min(ascensor.getPisoActual()));
+                    if (datos.botonesBajada.pre(ascensor.getPisoActual() - 1) != -1 || datos.botonesPanel.pre(ascensor.getPisoActual()) != -1 || 
+                            (datos.botonesSubida.min() < ascensor.getPisoActual() && datos.botonesSubida.min() != -1)) {
+                        ascensor.setPisoActual(ascensor.getPisoActual() - 1);
                         pensar = false;
                     }else{
                         ascensor.setEstat(estado.SUBIR);
@@ -104,9 +78,20 @@ public class Ascensor implements Constantes {
                 }
             }
             default -> {
-                if(datos.botonesSubida.getBoton(ascensor.getPisoActual()).isActivado() || datos.botonesPanel.getBoton(ascensor.getPisoActual()).isActivado() ||
-                        datos.botonesBajada.getBoton(ascensor.getPisoActual() - 1).isActivado()){
-                    return true;
+                if(ascensor.getEstat() == estado.SUBIR){
+                    if(datos.botonesSubida.getBoton(ascensor.getPisoActual()).isActivado() || datos.botonesPanel.getBoton(ascensor.getPisoActual()).isActivado()){
+                        return true;
+                    }else if(datos.botonesBajada.max() + 1 == ascensor.getPisoActual() && datos.botonesSubida.max() < ascensor.getPisoActual() && 
+                            datos.botonesPanel.max() < ascensor.getPisoActual()){
+                        return true;
+                    }
+                }else{
+                    if(datos.botonesBajada.getBoton(ascensor.getPisoActual() - 1).isActivado() || datos.botonesPanel.getBoton(ascensor.getPisoActual()).isActivado()){
+                        return true;
+                    }else if(datos.botonesSubida.min() == ascensor.getPisoActual()&& datos.botonesSubida.min() > ascensor.getPisoActual() && 
+                            datos.botonesPanel.min() > ascensor.getPisoActual()){
+                        return true;
+                    }
                 }
             }
         }

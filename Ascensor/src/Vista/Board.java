@@ -39,19 +39,23 @@ public class Board extends JPanel implements Constantes{
     @Override
     public void paint(Graphics g) {
         
-        g.setColor(Color.yellow);
+        g.setColor(new Color(239, 242, 47 ));
         g.fillRect(125, 0, 125, ALTO);
         ascensor.paint(g);
-        g.setColor(Color.red);
+        g.setColor(Color.gray);
         g.fillRect(ascensor.x1, ascensor.y, ascensor.ANCHO_ASCENSOR/2 - ascensor.restador, tamañoPorPiso);
         g.fillRect(ascensor.x2, ascensor.y, ascensor.ANCHO_ASCENSOR/2 + 1, tamañoPorPiso);
         g.setColor(Color.black);
         g.drawRect(ascensor.x1, ascensor.y, ascensor.ANCHO_ASCENSOR/2 - ascensor.restador, tamañoPorPiso);
         g.drawRect(ascensor.x2, ascensor.y, ascensor.ANCHO_ASCENSOR/2 + 1, tamañoPorPiso);
-        g.setColor(Color.green);
+        g.setColor(new Color(205, 225, 75));
         g.fillRect(50, 0, 75, ALTO);
         g.fillRect(250, 0, 75, ALTO);
         g.setColor(Color.black);
+        g.drawLine(50, 0, 50, ALTO);
+        g.drawLine(250, 0, 250, ALTO);
+        g.drawLine(125, 0, 125, ALTO);
+        g.drawLine(325, 0, 325, ALTO);
         for (int i = 0; i < PISOS - 1; i++) {
             g.drawLine(50, ALTO - (tamañoPorPiso * (i + 1)),50+75 ,  ALTO - (tamañoPorPiso * (i + 1)));
             g.drawLine(250, ALTO - (tamañoPorPiso * (i + 1)),250+75 ,  ALTO - (tamañoPorPiso * (i + 1)));

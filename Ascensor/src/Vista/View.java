@@ -7,39 +7,49 @@ package Vista;
 import Data.data;
 import Vista.elevator;
 import ascensor.Constantes;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
  * @author tomeu, emanuel
  */
-public class View extends JFrame implements MouseListener, Constantes {
+public class View extends JFrame implements MouseListener, KeyListener, Constantes {
 
     private Board board;
     private Panel panel;
     private data datos;
     private elevator ascensor;
+    private infoPanel aux;
 
     public View(data datos, elevator asc) {
         this.datos = datos;
         ascensor = asc;
         panel = new Panel(datos);
+        aux = new infoPanel();
         this.setTitle("ASCENSOR");
         setSize(ANCHO, ALTO + 50);
         this.setPreferredSize(new Dimension(ANCHO, ALTO + 50));
         setResizable(false);
         setLocationRelativeTo(null);
-        //setLayout(null);
         board = new Board(datos, asc);
         board.addMouseListener(this);
         panel.addMouseListener(this);
+        this.addKeyListener(this);
         add(board);
+        add(aux);
         add(panel);
+        this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -113,6 +123,24 @@ public class View extends JFrame implements MouseListener, Constantes {
 
     @Override
     public void mouseExited(MouseEvent e) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case 521 -> ascensor.setVelocitat(ascensor.getVelocitat() - 1);
+            case 45 -> ascensor.setVelocitat(ascensor.getVelocitat() + 1);
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
