@@ -6,11 +6,9 @@ package Vista;
 
 import Data.data;
 import ascensor.Constantes;
-import Vista.elevator;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import javax.swing.JPanel;
 
 /**

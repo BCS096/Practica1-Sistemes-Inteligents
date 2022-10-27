@@ -2,8 +2,6 @@
 package ascensor;
 
 import Data.data;
-import java.util.ArrayList;
-import Vista.Button;
 import Vista.View;
 import Vista.elevator;
 
@@ -13,9 +11,6 @@ import Vista.elevator;
  */
 public class Ascensor implements Constantes {
 
-    /**
-     * @param args the command line arguments
-     */
     public enum estado {
         SUBIR, BAJAR
     }

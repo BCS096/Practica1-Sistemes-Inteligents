@@ -4,15 +4,8 @@
  */
 package Vista;
 
-import static ascensor.Constantes.ALTO;
 import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.JButton;
 import javax.swing.JPanel;
-import Data.data;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 
 /**
