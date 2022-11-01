@@ -25,7 +25,7 @@ public class elevator implements java.io.Serializable,Constantes{
     private int pisoActual = 0;
     public final int ANCHO_ASCENSOR = 125;
     private int velocitat = 10;
-    private Rectangle2D.Float rec = new Rectangle2D.Float(ANCHO_ASCENSOR, ALTO - ALTO/PISOS, ANCHO_ASCENSOR, ALTO/PISOS);
+    private Rectangle2D.Float rec = new Rectangle2D.Float(75, ALTO - ALTO/PISOS, ANCHO_ASCENSOR, ALTO/PISOS);
     private Image image;
 
     public int getX1() {

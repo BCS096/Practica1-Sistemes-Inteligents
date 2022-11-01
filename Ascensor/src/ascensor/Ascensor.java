@@ -93,14 +93,14 @@ public class Ascensor implements Constantes {
         return false;
     }
     public static void simulacioAturada(elevator asc, View v) throws InterruptedException {
-        for (int i = 0; i < asc.ANCHO_ASCENSOR / 2; i++) {
+        for (int i = 0; i < asc.ANCHO_ASCENSOR / 2 - 1; i++) {
             asc.x2++;
             asc.restador++;
             Thread.sleep(50);
             v.repaint();
         }
         Thread.sleep(1000);
-        for (int i = 0; i < asc.ANCHO_ASCENSOR / 2; i++) {
+        for (int i = 0; i < asc.ANCHO_ASCENSOR / 2 - 1; i++) {
             asc.x2--;
             asc.restador--;
             Thread.sleep(50);

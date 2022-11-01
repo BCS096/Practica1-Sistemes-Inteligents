@@ -9,7 +9,11 @@ import ascensor.Constantes;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Rectangle2D;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -37,10 +41,17 @@ public class Panel extends JPanel implements Constantes {
 
     @Override
     public void paint(Graphics g) {
+       Graphics g2d = (Graphics2D) g;
+        g2d.drawImage(redimensionarImagen(new ImageIcon("background.jpg"), this.getWidth(), this.getHeight()), 276, 71, null);
         g.setColor(new Color(52, 52, 50));
         g.fillRect(400, 240, 100, 60 * PISOS + 10);
         for (int i = 0; i < datos.botonesPanel.longitud(); i++) {
             datos.botonesPanel.getBoton(i).paint(g);
         }
+    }
+        private Image redimensionarImagen(ImageIcon imagen, int ancho, int alto) {
+        Image imgEscalada = imagen.getImage().getScaledInstance(ancho,
+                alto, java.awt.Image.SCALE_DEFAULT);
+        return new ImageIcon(imgEscalada).getImage();
     }
 }
