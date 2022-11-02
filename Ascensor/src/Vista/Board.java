@@ -1,14 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package Vista;
 
 import Data.data;
 import ascensor.Constantes;
-import static ascensor.Constantes.ALTO;
-import static ascensor.Constantes.PISOS;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -42,8 +38,13 @@ public class Board extends JPanel implements Constantes{
     @Override
     public void paint(Graphics g) {
         Graphics g2d = (Graphics2D) g;
-        //g2d.drawImage(redimensionarImagen(new ImageIcon("pared.jpg"),this.getWidth(),this.getHeight()), 50, 0, null);
         g2d.drawImage(redimensionarImagen(new ImageIcon("fondo.png"),125,ALTO), 75, 0, null);
+        g.setFont(new Font("Monospaced", Font.BOLD, 36));
+        int num = 0;
+        for (int i = tamañoPorPiso/2; num < PISOS; i+= tamañoPorPiso) {
+            g.drawString(String.valueOf(num), 70 + 125/2,ALTO - i);
+            num++;
+        }
         ascensor.paint(g);
         g2d.drawImage(redimensionarImagen(new ImageIcon("puerta.jpg"),ascensor.ANCHO_ASCENSOR/2 - ascensor.restador,tamañoPorPiso), ascensor.x1, ascensor.y, null);
         g2d.drawImage(redimensionarImagen(new ImageIcon("puerta.jpg"),ascensor.ANCHO_ASCENSOR/2 + 1, tamañoPorPiso), ascensor.x2, ascensor.y, null);

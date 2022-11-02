@@ -1,21 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package Vista;
 
 import Data.data;
 import ascensor.Constantes;
-import static ascensor.Constantes.ALTO;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /**
@@ -56,12 +48,6 @@ public class View extends JFrame implements MouseListener, KeyListener, Constant
         board.repaint();
         panel.repaint();
     }
-
-//    @Override
-//    public void paint(Graphics g) {
-//        Graphics g2d = (Graphics2D) g;
-//        g2d.drawImage(redimensionarImagen(new ImageIcon("fondo.png"), this.getWidth(), this.getHeight()), 0, 0, null);
-//    }
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -138,25 +124,17 @@ public class View extends JFrame implements MouseListener, KeyListener, Constant
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case 521:
+            case 521 -> {
                 if (ascensor.getVelocitat() > 1) {
                     ascensor.setVelocitat(ascensor.getVelocitat() - 1);
                 }
-                break;
-            case 45:
-                ascensor.setVelocitat(ascensor.getVelocitat() + 1);
-                break;
+            }
+            case 45 -> ascensor.setVelocitat(ascensor.getVelocitat() + 1);
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private Image redimensionarImagen(ImageIcon imagen, int ancho, int alto) {
-        Image imgEscalada = imagen.getImage().getScaledInstance(ancho,
-                alto, java.awt.Image.SCALE_DEFAULT);
-        return new ImageIcon(imgEscalada).getImage();
     }
 }
