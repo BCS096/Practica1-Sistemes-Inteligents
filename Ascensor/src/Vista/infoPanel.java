@@ -24,7 +24,7 @@ public class infoPanel extends JPanel {
         text2 = new JLabel();
         text2.setText("Pitji la tecla '-' per disminuir la velocitat de l'ascensor");
         this.add(text2);
-        this.setBounds(276, 0, 500, 70);
+        this.setBounds(276, 0, 520, 70);
         this.setBackground(new Color(148, 148, 142));
         
     }
