@@ -93,8 +93,8 @@ public class tablero extends JFrame implements MouseListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
+        int x = e.getX() - 8;
+        int y = e.getY() - 30;
         boolean trobat = false;
         int i,j = 0;
         for (i = 0; i < datos.cova.length && !trobat; i++) {
@@ -117,6 +117,7 @@ public class tablero extends JFrame implements MouseListener{
                 } 
             }else if (datos.elegirMonstre){
                 datos.ponerMonstruo(i, j);
+                datos.elegirMonstre = false;
                 espera.release();
             }
         }

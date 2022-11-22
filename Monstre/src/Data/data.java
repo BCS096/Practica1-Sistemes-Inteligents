@@ -55,4 +55,11 @@ public class data {
         }
     }
     
+    public Habitacio percebre(int x, int y){
+        if( x >= 0 && x < cova.length && y >= 0 && y < cova.length ){
+            return cova[x][y];
+        }
+        return null;
+    }
+    
 }
