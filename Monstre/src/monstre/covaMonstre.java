@@ -47,7 +47,7 @@ public class covaMonstre {
                     //comunicar a la interfaz que ya no voy a estar en la casilla que estaba
                     int a = x + mov.nouMovX();
                     int b = y + mov.nouMovY();
-                    if(bc.moviment_viable(a,b)){
+                    if(!bc.visitada(a,b)&& bc.moviment_viable(a,b)){
                         //comunicar a la interfaz de la nueva casilla a la que voy a estar
                         acabat = solucion(a,b);
                     }
