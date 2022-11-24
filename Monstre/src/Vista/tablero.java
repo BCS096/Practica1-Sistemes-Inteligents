@@ -11,6 +11,7 @@ import Data.data;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -36,6 +37,22 @@ public class tablero extends JFrame implements MouseListener{
     private data datos;
     private Semaphore espera;
 
+    public tablero(int n) {
+        this.espera = espera;
+        this.datos = datos;
+        this.addMouseListener(this);
+        this.setLayout(new FlowLayout());
+        this.setSize(sizeFrame);
+        this.setMinimumSize(sizeFrame);
+        this.setMaximumSize(sizeFrame);
+        Background inicio = new Background();
+        inicio.repaint();
+        this.add(inicio);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
+    }
+    
     public tablero(int n, data datos, Semaphore espera) {
         this.espera = espera;
         this.datos = datos;
