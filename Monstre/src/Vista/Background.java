@@ -8,7 +8,6 @@ package Vista;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -26,6 +25,8 @@ class Background extends JPanel{
     private int height;
     private Image image;
     public Background(Dimension size){
+        this.setSize(size);
+        this.setPreferredSize(size);
         this.image = null;
         try {
             this.image = ImageIO.read((new File("media/inici.jpg")));

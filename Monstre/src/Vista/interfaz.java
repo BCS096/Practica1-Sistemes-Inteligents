@@ -6,12 +6,17 @@
 package Vista;
 
 import Data.data;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
 import java.util.concurrent.Semaphore;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,6 +36,8 @@ public class interfaz extends JFrame {
     private tablero cova;
     private data datos;
     private Semaphore espera;
+    private Dimension size = new Dimension(800, 600);
+    private Font fuente = new Font("Courier", Font.BOLD, 24);   
 
     public interfaz(Semaphore espera) {
         this.espera = espera;
@@ -43,29 +50,44 @@ public class interfaz extends JFrame {
     }
 
     private void inicializar() {
-        JPanel tablero = new JPanel();
-        tablero.setLayout(new GridLayout(1, 2));
+        this.setName("iniciCova");
+        this.setSize(size);
+        this.setPreferredSize(size);
+        this.setMaximumSize(size);
+        Background background = new Background(new Dimension(600, 600));
+        this.setLayout(new BorderLayout());
+        JPanel interaccion = new JPanel();
+        interaccion.setSize(new Dimension(200, 600));
+        interaccion.setPreferredSize(new Dimension(200, 600));
+        interaccion.setLayout(new FlowLayout());
+        this.add(background, BorderLayout.WEST);
         JLabel askSize = new JLabel("Tamaño de la cueva: ");
         resSize = new JTextField();
-        tablero.add(askSize);
-        tablero.add(resSize);
+        resSize.setFont(fuente);
+        resSize.setPreferredSize(new Dimension(30, 30));
+        interaccion.add(askSize);
+        interaccion.add(resSize);
         JLabel askPrecipici = new JLabel("Número de precipicis: ");
         numPrecipici = new JTextField();
-        tablero.add(askPrecipici);
-        tablero.add(numPrecipici);
-        this.add(tablero);
+        numPrecipici.setFont(fuente);
+        numPrecipici.setPreferredSize(new Dimension(30, 30));
+        interaccion.add(askPrecipici);
+        interaccion.add(numPrecipici);
         JButton soluciones = new JButton("Mostrar cueva");
         soluciones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 datos = new data(getSizeTablero());
                 datos.numPrecipicis = getNumPrecipicis();
+                setVisible(false);
+                dispose();
                 cova = new tablero(getSizeTablero(),datos, espera);
                 espera.release();
                 cova.repaint();
             }
         });
-        this.add(soluciones);
+        interaccion.add(soluciones);
+        this.add(interaccion, BorderLayout.EAST);
     }
 
     public int getSizeTablero() {
