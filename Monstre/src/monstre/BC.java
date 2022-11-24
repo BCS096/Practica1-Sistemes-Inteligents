@@ -23,6 +23,7 @@ public class BC {
     public BC() {
         this.bc1 = new HashMap<>();
         this.bc2 = new ArrayList<>();
+        this.visitades = new ArrayList();
         this.coordX = 0;
         this.coordY = 0;
     }
@@ -82,6 +83,8 @@ public class BC {
     }
 
     private ArrayList<String> comprovarPossiblesEliminacions(ArrayList<String> aux, Percepcions per) {
+        //TO DO : aux.size puede cambiar durante el bucle, antes del bucle guardarla en una variable
+        //mirar si en otro bucle pasa eso
         for (int i = 0; i < aux.size(); i++) {
             Habitacio hab = bc1.get(aux.get(i));
             switch (per) {

@@ -45,7 +45,7 @@ public class tablero extends JFrame implements MouseListener{
         this.setSize(sizeFrame);
         this.setMinimumSize(sizeFrame);
         this.setMaximumSize(sizeFrame);
-        Background inicio = new Background();
+        Background inicio = new Background(sizeFrame);
         inicio.repaint();
         this.add(inicio);
         this.pack();

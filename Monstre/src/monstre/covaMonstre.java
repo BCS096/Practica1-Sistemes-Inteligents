@@ -34,7 +34,8 @@ public class covaMonstre {
     
         
         public static boolean solucion (int x, int y){
-            Habitacio percepcion = datos.percebre(x, y);          
+            Habitacio percepcion = datos.percebre(x, y);  
+            bc.visitades.add(percepcion);
             Moviments mov = new Moviments();
             boolean acabat = false;
             bc.setPosicioActual(x, y);
@@ -47,7 +48,7 @@ public class covaMonstre {
                     //comunicar a la interfaz que ya no voy a estar en la casilla que estaba
                     int a = x + mov.nouMovX();
                     int b = y + mov.nouMovY();
-                    if(bc.moviment_viable(percepcion)){
+                    if(bc.moviment_viable(a, b)){
                         //comunicar a la interfaz de la nueva casilla a la que voy a estar
                         acabat = solucion(a,b);
                     }
