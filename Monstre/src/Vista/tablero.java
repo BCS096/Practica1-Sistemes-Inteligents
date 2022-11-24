@@ -38,16 +38,14 @@ public class tablero extends JFrame implements MouseListener{
     private Semaphore espera;
 
     public tablero(int n) {
-        this.espera = espera;
-        this.datos = datos;
         this.addMouseListener(this);
         this.setLayout(new FlowLayout());
         this.setSize(sizeFrame);
         this.setMinimumSize(sizeFrame);
         this.setMaximumSize(sizeFrame);
-        Background inicio = new Background(sizeFrame);
-        inicio.repaint();
-        this.add(inicio);
+        //Background inicio = new Background(sizeFrame);
+       // inicio.repaint();
+       // this.add(inicio);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -125,7 +123,6 @@ public class tablero extends JFrame implements MouseListener{
         j--;
         if(trobat){
             if(datos.elegirPrecipicis){
-                System.out.println("hab: "+i+","+j);
                 datos.ponerPrecipicio(i,j);
                 datos.numPrecipicis --;
                 if(datos.numPrecipicis == 0){
@@ -135,6 +132,10 @@ public class tablero extends JFrame implements MouseListener{
             }else if (datos.elegirMonstre){
                 datos.ponerMonstruo(i, j);
                 datos.elegirMonstre = false;
+                espera.release();
+            }else if (datos.elegirTresor){
+                datos.ponerTesoro(i, j);
+                datos.elegirTresor = false;
                 espera.release();
             }
         }

@@ -75,27 +75,33 @@ public class BC {
                 if (!(type == Tipus.POTSER && (valor.getMonstre() == Tipus.NO || valor.getMonstre() == Tipus.SI))) {
                     valor.setMonstre(type);
                 }
+                break;
             case PRECIPICIO:
                 if (!(type == Tipus.POTSER && (valor.getPrecipici() == Tipus.NO || valor.getPrecipici() == Tipus.SI))) {
                     valor.setPrecipici(type);
                 }
+                break;
         }
     }
 
     private ArrayList<String> comprovarPossiblesEliminacions(ArrayList<String> aux, Percepcions per) {
         //TO DO : aux.size puede cambiar durante el bucle, antes del bucle guardarla en una variable
         //mirar si en otro bucle pasa eso
-        for (int i = 0; i < aux.size(); i++) {
+        for (int i = 0; i < aux.size() && i >= 0; i++) {
             Habitacio hab = bc1.get(aux.get(i));
             switch (per) {
                 case MONSTRUO:
                     if (hab != null && (hab.getMonstre() == Tipus.NO || hab.getMonstre() == Tipus.SI)) {
                         aux.remove(i);
+                        i--;
                     }
+                    break;
                 case PRECIPICIO:
                     if (hab != null && (hab.getPrecipici() == Tipus.NO || hab.getPrecipici() == Tipus.SI)) {
                         aux.remove(i);
+                        i--;
                     }
+                    break;
             }
         }
         return aux;
@@ -106,7 +112,7 @@ public class BC {
         this.coordY = y;
     }
 
-    private void comprovarORs(Percepcions per, String coords) {
+    public void comprovarORs(Percepcions per, String coords) {
         Habitacio aux = bc1.get(coords);
         switch (per) {
             case MONSTRUO:
@@ -115,12 +121,13 @@ public class BC {
                         OR or = bc2.get(i);
                         if (or.tipus == per) {
                             for (int j = 0; j < or.habitacions.size(); j++) {
-                                if (coords.equals(or.habitacions.get(i))) {
+                                if (coords.equals(or.habitacions.get(j))) {
                                     or.habitacions.remove(j);
                                     if (or.habitacions.size() == 1) {
                                         Habitacio hab = bc1.get(coords);
                                         hab.setMonstre(Tipus.SI);
-                                        bc2.remove(j);
+                                        bc2.remove(i);
+                                        break;
                                     }
                                 }
                             }
@@ -128,24 +135,27 @@ public class BC {
 
                     }
                 }
+                break;
             case PRECIPICIO:
                 if (aux != null && aux.getPrecipici() == Tipus.POTSER) {
                     for (int i = 0; i < bc2.size(); i++) {
                         OR or = bc2.get(i);
                         if (or.tipus == per) {
                             for (int j = 0; j < or.habitacions.size(); j++) {
-                                if (coords.equals(or.habitacions.get(i))) {
+                                if (coords.equals(or.habitacions.get(j))) {
                                     or.habitacions.remove(j);
                                     if (or.habitacions.size() == 1) {
                                         Habitacio hab = bc1.get(coords);
                                         hab.setPrecipici(Tipus.SI);
-                                        bc2.remove(j);
+                                        bc2.remove(i);
+                                        break;
                                     }
                                 }
                             }
                         }
                     }
                 }
+                break;
         }
     }
 
@@ -158,6 +168,18 @@ public class BC {
             }
         } //SI YA HA SIDO VISITADA PERO RECULAS? NO IMPLEMENTADO POR TANTO DE MOMENTO FALSE
         return false;
+    }
+
+    void mostrarBC() {
+        System.out.println("******************* BC 1 ****************************\n");
+        bc1.forEach((k,v) -> System.out.println("Habitacion "+k+" con la información\n\n"+v.getInfo()));
+        System.out.println("******************* BC 2 ****************************\n");
+        for (int i = 0; i < bc2.size(); i++) {
+            System.out.println("         OR "+ (i + 1));
+            for (int j = 0; j < bc2.get(i).habitacions.size(); j++) {
+                System.out.println("    Habitació  "+bc2.get(i).habitacions.get(j));
+            }
+        }
     }
 
 }

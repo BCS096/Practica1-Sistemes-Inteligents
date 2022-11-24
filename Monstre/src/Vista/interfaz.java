@@ -60,8 +60,8 @@ public class interfaz extends JFrame {
             public void actionPerformed(ActionEvent ae) {
                 datos = new data(getSizeTablero());
                 datos.numPrecipicis = getNumPrecipicis();
-                espera.release();
                 cova = new tablero(getSizeTablero(),datos, espera);
+                espera.release();
                 cova.repaint();
             }
         });

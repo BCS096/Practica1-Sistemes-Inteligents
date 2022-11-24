@@ -6,6 +6,7 @@
 package monstre;
 
 import Data.Habitacio;
+import Data.Percepcions;
 import Data.data;
 import Data.Tipus;
 import Vista.interfaz;
@@ -25,11 +26,14 @@ public class covaMonstre {
             interfaz cova = new interfaz(espera);
             espera.acquire();
             datos = cova.getData();
+            datos.cova[0][4].setResplandor(Tipus.SI);
             datos.elegirPrecipicis = true;   
             espera.acquire();
             datos.elegirMonstre = true;
             espera.acquire();
-            solucion(0,0);
+            datos.elegirTresor = true;
+            espera.acquire();
+            System.out.println(solucion(0,0));
     }
     
         
@@ -39,11 +43,16 @@ public class covaMonstre {
             Moviments mov = new Moviments();
             boolean acabat = false;
             bc.setPosicioActual(x, y);
-            if(percepcion == null){ //si m'he donat un cop 
+            if(percepcion == null){ //si m'he donat un cop
+                String s = "(" + x + "," + y + ")";
+                bc.comprovarORs(Percepcions.MONSTRUO, s);
+                bc.comprovarORs(Percepcions.PRECIPICIO, s);
                 return false;
+
             }
             if(percepcion.getResplandor() != Tipus.SI){
                 bc.aprender(percepcion);
+                bc.mostrarBC();
                 for (int i = 0; i < 4 && !acabat; i++) {
                     //comunicar a la interfaz que ya no voy a estar en la casilla que estaba
                     int a = x + mov.nouMovX();
@@ -57,6 +66,6 @@ public class covaMonstre {
             }else{
                 return true;
             }
-            return false;
+            return acabat;
         }
 }

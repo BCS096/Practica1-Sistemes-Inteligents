@@ -12,12 +12,14 @@ public class data {
     public Habitacio[][] cova;
     public boolean elegirPrecipicis;
     public boolean elegirMonstre;
+    public boolean elegirTresor;
     public int numPrecipicis;
     
     public data(int dim){
         cova = new Habitacio[dim][dim];
         elegirPrecipicis = false;
         elegirMonstre = false;
+        elegirTresor = false;
         numPrecipicis = 0;
     }
 
@@ -60,6 +62,11 @@ public class data {
             return cova[x][y];
         }
         return null;
+    }
+
+    public void ponerTesoro(int i, int j) {
+        cova[i][j].setResplandor(Tipus.SI);
+        cova[i][j].setBackground(Color.BLUE);
     }
     
 }

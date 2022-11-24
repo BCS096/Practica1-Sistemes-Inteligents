@@ -91,4 +91,8 @@ public class Habitacio extends JPanel {
     public void setResplandor(Tipus resplandor) {
         this.resplandor = resplandor;
     }
+
+    public String getInfo() {
+       return "    hedor ="+hedor+"\n    brisa = "+brisa+"\n    monstre = "+monstre+"\n    precipici = "+precipici+"    resplandor = "+resplandor+"\n";
+    }
 }
