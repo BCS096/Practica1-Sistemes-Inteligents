@@ -29,7 +29,6 @@ public class covaMonstre {
             espera.acquire();
             datos.elegirMonstre = true;
             espera.acquire();
-            System.out.println("A partir de aqui se genera el codigo para que el agente se mueva");
             solucion(0,0);
     }
     
