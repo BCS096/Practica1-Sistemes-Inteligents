@@ -31,6 +31,15 @@ public class Habitacio extends JPanel {
         this.resplandor = resplandor;
         this.rec = rec;
     }
+    
+    public Habitacio(Tipus hedor, Tipus brisa, Tipus monstre, Tipus precipici, Tipus resplandor) {
+        this.hedor = hedor;
+        this.brisa = brisa;
+        this.monstre = monstre;
+        this.precipici = precipici;
+        this.resplandor = resplandor;
+        this.rec = null;
+    }
 
     public Rectangle2D.Float getRec() {
         return rec;
