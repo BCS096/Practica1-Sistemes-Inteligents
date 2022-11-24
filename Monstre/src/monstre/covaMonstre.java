@@ -38,6 +38,7 @@ public class covaMonstre {
             Habitacio percepcion = datos.percebre(x, y);          
             Moviments mov = new Moviments();
             boolean acabat = false;
+            bc.setPosicioActual(x, y);
             if(percepcion == null){ //si m'he donat un cop 
                 return false;
             }
