@@ -26,7 +26,6 @@ public class covaMonstre {
             interfaz cova = new interfaz(espera);
             espera.acquire();
             datos = cova.getData();
-            datos.cova[0][4].setResplandor(Tipus.SI);
             datos.elegirPrecipicis = true;   
             espera.acquire();
             datos.elegirMonstre = true;
