@@ -140,6 +140,9 @@ public class Habitacio extends JPanel {
                     case TRESOR:
                         img = ImageIO.read(new File("media/tesoro.png"));
                         break;
+                    case ONEUP:
+                        img = ImageIO.read(new File("media/1up.png"));
+                        break;
                     default:
                         break;
                 }
@@ -170,5 +173,9 @@ public class Habitacio extends JPanel {
 
     public boolean isAgente() {
         return this.sprite == sprite.AGENT ? true : false;
+    }
+
+    public boolean isTesoro() {
+        return this.sprite == sprite.TRESOR ? true : false;
     }
 }

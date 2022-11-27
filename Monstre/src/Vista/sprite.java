@@ -5,7 +5,8 @@ public enum sprite {
     BRISA("Brisa"),
     MONSTRE("Monstre"),
     PRECIPICI("Precipici"),
-    TRESOR("Tresor");
+    TRESOR("Tresor"),
+    ONEUP("Tresor obtingut");
 
     private final String type;
 

@@ -93,9 +93,9 @@ public class tablero extends JFrame implements MouseListener, Notify{
 
     private void paintCasillas(Habitacio casilla, int x, int y) {
             if ((y + x + 1) % 2 == 0) {
-            casilla.setColor(new Color(250, 250, 171));
+            casilla.setColor(new Color(165, 138, 138));
         } else {
-            casilla.setColor(new Color(245, 245, 84));
+            casilla.setColor(new Color(158, 158, 158));
         }
  
     }
@@ -203,7 +203,28 @@ public class tablero extends JFrame implements MouseListener, Notify{
                 
             }
                 break;
-
+            case END:
+                Habitacio temp = null;
+                for(int i = 0; i < datos.cova.length; i++){
+                    for(int j = 0; j < datos.cova[i].length; j++){
+                        if(datos.cova[i][j].isTesoro()){
+                            datos.cova[i][j].setSprite();
+                            temp = datos.cova[i][j];
+                        }
+                    }
+                }
+                try{
+                    h.setSprite();
+                    temp.setSprite(sprite.ONEUP);
+                    this.repaint();
+                    Thread.sleep(1000);
+                    temp.setSprite();
+                    temp.setSprite(sprite.AGENT);
+                    this.repaint();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
             default:
                 throw new AssertionError("Unexpected event in GUI: " + event.name());
         }

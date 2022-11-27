@@ -1,7 +1,8 @@
 package interfaces;
 
 public enum EventEnum {
-    MOVER("Moure agent");
+    MOVER("Moure agent"),
+    END("Tresor trobat");
 
     private final String text;
 
