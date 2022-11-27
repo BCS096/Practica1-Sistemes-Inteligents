@@ -4,10 +4,15 @@
  */
 package Data;
 
+import Vista.sprite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 /**
@@ -22,6 +27,11 @@ public class Habitacio extends JPanel {
     private Tipus precipici;
     private Tipus resplandor;
     private Rectangle2D.Float rec;
+    private Color color;
+    private sprite sprite;
+
+    private int size = 0;
+    private Image img;
 
     public Habitacio(Tipus hedor, Tipus brisa, Tipus monstre, Tipus precipici, Tipus resplandor, Rectangle2D.Float rec) {
         this.hedor = hedor;
@@ -30,8 +40,9 @@ public class Habitacio extends JPanel {
         this.precipici = precipici;
         this.resplandor = resplandor;
         this.rec = rec;
+        this.sprite = null;
     }
-    
+
     public Habitacio(Tipus hedor, Tipus brisa, Tipus monstre, Tipus precipici, Tipus resplandor) {
         this.hedor = hedor;
         this.brisa = brisa;
@@ -39,6 +50,19 @@ public class Habitacio extends JPanel {
         this.precipici = precipici;
         this.resplandor = resplandor;
         this.rec = null;
+        this.sprite = null;
+    }
+
+    public void setSprite(sprite sprite) {
+        this.sprite = sprite;
+    }
+
+    public void setSprite() {
+        this.sprite = null;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public Rectangle2D.Float getRec() {
@@ -92,7 +116,59 @@ public class Habitacio extends JPanel {
         this.resplandor = resplandor;
     }
 
+    @Override
+    public void paintComponent(Graphics g) {
+        //super.paint(g);
+        img = null;
+        g.setColor(color);
+        g.fillRect(0, 0, size, size);
+        try {
+            if (sprite != null) {
+                switch (sprite) {
+                    case AGENT:
+                        img = ImageIO.read(new File("media/agente.png"));
+                        break;
+                    case MONSTRE:
+                        img = ImageIO.read(new File("media/monstruo.png"));
+                        break;
+                    case PRECIPICI:
+                        img = ImageIO.read(new File("media/precipicio.png"));
+                        break;
+                    case BRISA:
+                        img = ImageIO.read(new File("media/agente.png"));
+                        break;
+                    case TRESOR:
+                        img = ImageIO.read(new File("media/tesoro.png"));
+                        break;
+                    default:
+                        break;
+                }
+                img = img.getScaledInstance(calculateSize(), calculateSize(), Image.SCALE_SMOOTH);
+                g.drawImage(img, calculatePos(), calculatePos(), null);
+            }
+        } catch (IOException e) {
+            System.err.println("No existe la imagen!");
+        }
+    }
+    
+    private int calculateSize(){
+        double temp = this.size * 0.25;
+        return (int) Math.ceil(size-temp);
+    }
+    
+    private int calculatePos(){
+        return (int) Math.ceil((this.size - calculateSize())/2);
+    }
+
     public String getInfo() {
-       return "    hedor ="+hedor+"\n    brisa = "+brisa+"\n    monstre = "+monstre+"\n    precipici = "+precipici+"    resplandor = "+resplandor+"\n";
+        return "    hedor =" + hedor + "\n    brisa = " + brisa + "\n    monstre = " + monstre + "\n    precipici = " + precipici + "    resplandor = " + resplandor + "\n";
+    }
+
+    public void setHabitacio(int size) {
+        this.size = size;
+    }
+
+    public boolean isAgente() {
+        return this.sprite == sprite.AGENT ? true : false;
     }
 }

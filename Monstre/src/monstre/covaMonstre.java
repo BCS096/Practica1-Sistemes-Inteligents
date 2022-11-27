@@ -10,6 +10,7 @@ import Data.Percepcions;
 import Data.data;
 import Data.Tipus;
 import Vista.interfaz;
+import interfaces.EventEnum;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -21,9 +22,11 @@ public class covaMonstre {
     static Semaphore espera = new Semaphore(0);
     static data datos;
     static BC bc = new BC();
+    static interfaz cova;
+    public static Semaphore step = new Semaphore(1);
     
         public static void main(String[] args) throws InterruptedException {
-            interfaz cova = new interfaz(espera);
+            cova = new interfaz(espera);
             espera.acquire();
             datos = cova.getData();
             datos.elegirPrecipicis = true;   
@@ -36,7 +39,7 @@ public class covaMonstre {
     }
     
         
-        public static boolean solucion (int x, int y){
+        public static boolean solucion (int x, int y) throws InterruptedException{
             Habitacio percepcion = datos.percebre(x, y);  
             bc.visitades.add(percepcion);
             Moviments mov = new Moviments();
@@ -53,16 +56,19 @@ public class covaMonstre {
                 bc.aprender(percepcion);
                 bc.mostrarBC();
                 for (int i = 0; i < 4 && !acabat; i++) {
-                    //comunicar a la interfaz que ya no voy a estar en la casilla que estaba
+                    //comunicar a la interfaz que ya no voy a estar en la casilla que estaba, no hace falta graficamente
                     int a = x + mov.nouMovX();
                     int b = y + mov.nouMovY();
                     if(bc.moviment_viable(a, b)){
                         //comunicar a la interfaz de la nueva casilla a la que voy a estar
+                        step.acquire();
+                        cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("("+x+","+y+")"));
                         acabat = solucion(a,b);
                     }
                     mov.nouMoviment();
                 }      
             }else{
+                //FALTA QUE PINTE LA ULTIMA CASILLA, AL AGENTE SOBRE EL TESORO
                 return true;
             }
             return acabat;

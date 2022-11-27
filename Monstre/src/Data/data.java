@@ -25,7 +25,7 @@ public class data {
 
     public void ponerPrecipicio(int i, int j) {
         cova[i][j].setPrecipici(Tipus.SI);
-        cova[i][j].setBackground(Color.red);
+        cova[i][j].setSprite(Vista.sprite.PRECIPICI);
         if(i + 1 != cova.length){
             cova[i + 1][j].setBrisa(Tipus.SI);
         }
@@ -42,7 +42,7 @@ public class data {
     
     public void ponerMonstruo(int i, int j) {
         cova[i][j].setMonstre(Tipus.SI);
-        cova[i][j].setBackground(Color.green);
+        cova[i][j].setSprite(Vista.sprite.MONSTRE);
         if(i + 1 != cova.length){
             cova[i + 1][j].setHedor(Tipus.SI);
         }
@@ -66,7 +66,7 @@ public class data {
 
     public void ponerTesoro(int i, int j) {
         cova[i][j].setResplandor(Tipus.SI);
-        cova[i][j].setBackground(Color.BLUE);
+        cova[i][j].setSprite(Vista.sprite.TRESOR);
     }
     
 }

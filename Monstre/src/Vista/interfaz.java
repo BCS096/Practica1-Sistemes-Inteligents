@@ -48,6 +48,10 @@ public class interfaz extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
+    
+    public tablero getTablero(){
+        return this.cova;
+    }
 
     private void inicializar() {
         this.setName("iniciCova");

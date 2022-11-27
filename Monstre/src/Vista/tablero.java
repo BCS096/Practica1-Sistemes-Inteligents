@@ -8,6 +8,8 @@ package Vista;
 import Data.Habitacio;
 import Data.Tipus;
 import Data.data;
+import interfaces.EventEnum;
+import interfaces.Notify;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -22,6 +24,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.concurrent.Semaphore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,12 +34,14 @@ import javax.swing.JPanel;
  *
  * @author emanu
  */
-public class tablero extends JFrame implements MouseListener{
+public class tablero extends JFrame implements MouseListener, Notify{
     private int xC;
     private int yC;
     private final Dimension sizeFrame = new Dimension(512, 512);
     private data datos;
     private Semaphore espera;
+    private int currentX = 0;
+    private int currentY = 0;
 
     public tablero(int n) {
         this.addMouseListener(this);
@@ -64,6 +70,7 @@ public class tablero extends JFrame implements MouseListener{
         inicializarCasillas();
         this.pack();
         this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
@@ -73,6 +80,7 @@ public class tablero extends JFrame implements MouseListener{
             int x = 0;
             for (int i = 0; i < datos.cova.length; i++) {  
                 datos.cova[i][j] = new Habitacio(Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, new Rectangle2D.Float(x, y, xC, yC));
+                datos.cova[i][j].setHabitacio(xC);
                 datos.cova[i][j].setOpaque(true);
                 datos.cova[i][j].setSize(new Dimension(xC, yC));
                 paintCasillas(datos.cova[i][j], i, j);
@@ -85,9 +93,9 @@ public class tablero extends JFrame implements MouseListener{
 
     private void paintCasillas(Habitacio casilla, int x, int y) {
             if ((y + x + 1) % 2 == 0) {
-            casilla.setBackground(new Color(250, 250, 171));
+            casilla.setColor(new Color(250, 250, 171));
         } else {
-            casilla.setBackground(new Color(245, 245, 84));
+            casilla.setColor(new Color(245, 245, 84));
         }
  
     }
@@ -170,6 +178,35 @@ public class tablero extends JFrame implements MouseListener{
         y = y/(512/datos.cova.length);
         System.out.println("hab: "+x+","+y);
         
+    }
+    
+    @Override
+    public void notify(EventEnum event, Habitacio h) {
+        switch (event) {
+            case MOVER:
+                for(int i = 0; i < datos.cova.length; i++){
+                    for(int j = 0; j < datos.cova[i].length; j++){
+                        if(datos.cova[i][j].isAgente()){
+                            datos.cova[i][j].setSprite();
+                        }
+                    }
+                }
+                h.setSprite(sprite.AGENT);
+                this.repaint();
+            {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                monstre.covaMonstre.step.release();
+                
+            }
+                break;
+
+            default:
+                throw new AssertionError("Unexpected event in GUI: " + event.name());
+        }
     }
 
     
