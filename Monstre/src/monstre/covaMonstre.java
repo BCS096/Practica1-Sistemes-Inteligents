@@ -35,7 +35,14 @@ public class covaMonstre {
         espera.acquire();
         datos.elegirTresor = true;
         espera.acquire();
-        System.out.println(solucion(0, 0));
+        boolean trobat = false;
+        System.out.println((trobat = solucion(0, 0)));
+        step.acquire();
+        if (trobat) {
+            cova.getTablero().notify(EventEnum.FOUND, null, bc.visitades);
+        }
+        step.acquire();
+        cova.getTablero().notify(EventEnum.RETURN, null, bc.visitades);
     }
 
     public static boolean solucion(int x, int y) throws InterruptedException {
@@ -61,7 +68,7 @@ public class covaMonstre {
                 if (bc.moviment_viable(a, b)) {
                     //comunicar a la interfaz de la nueva casilla a la que voy a estar
                     step.acquire();
-                    cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"));
+                    cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
                     acabat = solucion(a, b);
                 }
                 mov.nouMoviment();
@@ -69,8 +76,6 @@ public class covaMonstre {
         } else {
             return true;
         }
-        step.acquire();
-        cova.getTablero().notify(EventEnum.END, bc.bc1.get("(" + x + "," + y + ")"));
         return acabat;
     }
 }
