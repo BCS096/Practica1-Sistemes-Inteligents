@@ -33,6 +33,7 @@ public class interfaz extends JFrame {
 
     private JTextField resSize;
     private JTextField numPrecipici;
+    private JTextField numMonstres;
     private tablero cova;
     private data datos;
     private Semaphore espera;
@@ -65,7 +66,7 @@ public class interfaz extends JFrame {
         interaccion.setPreferredSize(new Dimension(200, 600));
         interaccion.setLayout(new FlowLayout());
         this.add(background, BorderLayout.WEST);
-        JLabel askSize = new JLabel("Tamaño de la cueva: ");
+        JLabel askSize = new JLabel("Tamaño de la cueva:    ");
         resSize = new JTextField();
         resSize.setFont(fuente);
         resSize.setPreferredSize(new Dimension(30, 30));
@@ -77,12 +78,19 @@ public class interfaz extends JFrame {
         numPrecipici.setPreferredSize(new Dimension(30, 30));
         interaccion.add(askPrecipici);
         interaccion.add(numPrecipici);
+        JLabel askMonstre = new JLabel("Número de monstres: ");
+        numMonstres = new JTextField();
+        numMonstres.setFont(fuente);
+        numMonstres.setPreferredSize(new Dimension(30, 30));
+        interaccion.add(askMonstre);
+        interaccion.add(numMonstres);
         JButton soluciones = new JButton("Mostrar cueva");
         soluciones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 datos = new data(getSizeTablero());
                 datos.numPrecipicis = getNumPrecipicis();
+                datos.numMonstres = getNumMonstres();
                 setVisible(false);
                 dispose();
                 cova = new tablero(getSizeTablero(),datos, espera);
@@ -102,6 +110,9 @@ public class interfaz extends JFrame {
         return Integer.parseInt(this.numPrecipici.getText());
     }
 
+    public int getNumMonstres() {
+        return Integer.parseInt(this.numMonstres.getText());
+    }
     public void repintar() {
         cova.repaint();
     }

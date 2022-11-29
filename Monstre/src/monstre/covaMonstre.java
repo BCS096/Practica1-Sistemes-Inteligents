@@ -11,6 +11,7 @@ import Data.data;
 import Data.Tipus;
 import Vista.interfaz;
 import interfaces.EventEnum;
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -35,14 +36,10 @@ public class covaMonstre {
         espera.acquire();
         datos.elegirTresor = true;
         espera.acquire();
-        boolean trobat = false;
-        System.out.println((trobat = solucion(0, 0)));
-        step.acquire();
-        if (trobat) {
-            cova.getTablero().notify(EventEnum.FOUND, null, bc.visitades);
+        while (!solucion(0, 0)) {
+            bc.visitades = new ArrayList();
         }
-        step.acquire();
-        cova.getTablero().notify(EventEnum.RETURN, null, bc.visitades);
+
     }
 
     public static boolean solucion(int x, int y) throws InterruptedException {
@@ -60,6 +57,8 @@ public class covaMonstre {
         }
         if (percepcion.getResplandor() != Tipus.SI) {
             bc.aprender(percepcion);
+            step.acquire();
+            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
             bc.mostrarBC();
             for (int i = 0; i < 4 && !acabat; i++) {
                 //comunicar a la interfaz que ya no voy a estar en la casilla que estaba, no hace falta graficamente
@@ -67,13 +66,14 @@ public class covaMonstre {
                 int b = y + mov.nouMovY();
                 if (bc.moviment_viable(a, b)) {
                     //comunicar a la interfaz de la nueva casilla a la que voy a estar
+                    acabat = solucion(a, b);
                     step.acquire();
                     cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
-                    acabat = solucion(a, b);
                 }
                 mov.nouMoviment();
             }
         } else {
+            cova.getTablero().notify(EventEnum.FOUND, null, bc.visitades);
             return true;
         }
         return acabat;

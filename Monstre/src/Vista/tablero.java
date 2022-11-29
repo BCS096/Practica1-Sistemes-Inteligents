@@ -35,7 +35,7 @@ import javax.swing.JPanel;
  *
  * @author emanu
  */
-public class tablero extends JFrame implements MouseListener, Notify {
+public class tablero extends JPanel implements MouseListener, Notify {
 
     private int xC;
     private int yC;
@@ -44,6 +44,7 @@ public class tablero extends JFrame implements MouseListener, Notify {
     private Semaphore espera;
     private int currentX = 0;
     private int currentY = 0;
+    public int timer = 500;
 
     public tablero(int n) {
         this.addMouseListener(this);
@@ -51,11 +52,8 @@ public class tablero extends JFrame implements MouseListener, Notify {
         this.setSize(sizeFrame);
         this.setMinimumSize(sizeFrame);
         this.setMaximumSize(sizeFrame);
-        //Background inicio = new Background(sizeFrame);
-        // inicio.repaint();
-        // this.add(inicio);
-        this.pack();
-        this.setLocationRelativeTo(null);
+        //this.pack();
+        //this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
@@ -70,9 +68,9 @@ public class tablero extends JFrame implements MouseListener, Notify {
         xC = sizeFrame.height / n; //xC es el tamaño que tiene cada habitacion
         yC = xC;
         inicializarCasillas();
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //this.pack();
+        //this.setLocationRelativeTo(null);
+       // this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
@@ -124,6 +122,7 @@ public class tablero extends JFrame implements MouseListener, Notify {
         for (i = 0; i < datos.cova.length && !trobat; i++) {
             for (j = 0; j < datos.cova.length && !trobat; j++) {
                 if (datos.cova[i][j].getRec().contains(x, y)) {
+                    System.out.println("El rectangulo tiene x: " + datos.cova[i][j].getRec().x + ", y: " + datos.cova[i][j].getRec().y + "  y widthxheight " + datos.cova[i][j].getRec().width + ", " + datos.cova[i][j].getRec().height);
                     trobat = true;
                 }
             }
@@ -140,8 +139,11 @@ public class tablero extends JFrame implements MouseListener, Notify {
                 }
             } else if (datos.elegirMonstre) {
                 datos.ponerMonstruo(i, j);
-                datos.elegirMonstre = false;
-                espera.release();
+                datos.numMonstres--;
+                if (datos.numMonstres == 0){
+                    datos.elegirMonstre = false;
+                    espera.release();
+                }  
             } else if (datos.elegirTresor) {
                 datos.ponerTesoro(i, j);
                 datos.elegirTresor = false;
@@ -180,38 +182,31 @@ public class tablero extends JFrame implements MouseListener, Notify {
         System.out.println("hab: " + x + "," + y);
 
     }
-    
+
     Habitacio agentDins = null;
 
     @Override
     public void notify(EventEnum event, Habitacio h, ArrayList<Habitacio> camino) {
         switch (event) {
             case MOVER:
-//                for (int i = 0; i < datos.cova.length; i++) {
-//                    for (int j = 0; j < datos.cova[i].length; j++) {
-//                        if (datos.cova[i][j].isAgente()) {
-//                            datos.cova[i][j].setSprite();
-//                        }
-//                    }
-//                }
-                try{
+                try {
                 agentDins.setSprite();
-                }catch(NullPointerException e){
-                    System.err.println("Primer movimiento, agente no colocado, seguimos...");
+            } catch (NullPointerException e) {
+                System.err.println("Primer movimiento, agente no colocado, seguimos...");
+            }
+            h.setSprite(sprite.AGENT);
+            this.repaint();
+            agentDins = h;
+             {
+                try {
+                    Thread.sleep(timer);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                h.setSprite(sprite.AGENT);
-                this.repaint();
-                agentDins = h;
-                 {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    monstre.covaMonstre.step.release();
+                monstre.covaMonstre.step.release();
 
-                }
-                break;
+            }
+            break;
             case FOUND:
                 Habitacio tresor = null;
                 int index = camino.size() <= 1 ? (camino.size() == 0 ? -1 : 0) : camino.size() - 2;
@@ -232,11 +227,13 @@ public class tablero extends JFrame implements MouseListener, Notify {
                     temp.setSprite();
                     tresor.setSprite(sprite.ONEUP);
                     this.repaint();
-                    Thread.sleep(1000);
+                    Thread.sleep(timer);
                     tresor.setSprite();
                     tresor.setSprite(sprite.AGENT);
                     this.repaint();
-                    Thread.sleep(1000);
+                    Thread.sleep(timer);
+                    tresor.setSprite();
+                    this.repaint();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -257,7 +254,7 @@ public class tablero extends JFrame implements MouseListener, Notify {
                         actual.setSprite(sprite.AGENT);
                         //Visualizamos
                         this.repaint();
-                        Thread.sleep(1000);
+                        Thread.sleep(timer);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
                     }

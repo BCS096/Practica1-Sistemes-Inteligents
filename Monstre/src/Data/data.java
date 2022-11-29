@@ -14,6 +14,7 @@ public class data {
     public boolean elegirMonstre;
     public boolean elegirTresor;
     public int numPrecipicis;
+    public int numMonstres;
     
     public data(int dim){
         cova = new Habitacio[dim][dim];
@@ -21,6 +22,7 @@ public class data {
         elegirMonstre = false;
         elegirTresor = false;
         numPrecipicis = 0;
+        numMonstres = 0;
     }
 
     public void ponerPrecipicio(int i, int j) {
