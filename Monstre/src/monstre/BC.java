@@ -93,13 +93,13 @@ public class BC {
             Habitacio hab = bc1.get(aux.get(i));
             switch (per) {
                 case MONSTRUO:
-                    if (hab != null && (hab.getMonstre() == Tipus.NO || hab.getMonstre() == Tipus.SI)) {
+                    if (hab != null && (hab.getMonstre() == Tipus.NO)) {
                         aux.remove(i);
                         i--;
                     }
                     break;
                 case PRECIPICIO:
-                    if (hab != null && (hab.getPrecipici() == Tipus.NO || hab.getPrecipici() == Tipus.SI)) {
+                    if (hab != null && (hab.getPrecipici() == Tipus.NO)) {
                         aux.remove(i);
                         i--;
                     }
