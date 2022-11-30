@@ -25,6 +25,8 @@ public class covaMonstre {
     static BC bc = new BC();
     static interfaz cova;
     public static Semaphore step = new Semaphore(1);
+    public static Semaphore pasito = new Semaphore(0);
+    public static boolean automatic = false;
 
     public static void main(String[] args) throws InterruptedException {
         cova = new interfaz(espera);
@@ -55,10 +57,21 @@ public class covaMonstre {
             return false;
 
         }
+        if (cova.getMapa() != null) {
+            cova.getMapa().notify(EventEnum.MAPA, null, null, bc.bc1);
+            if(percepcion.getResplandor() == Tipus.SI){
+                System.out.println("SORRA");
+            }
+        } else {
+            //System.out.println("Mapa no invocado");
+        }
         if (percepcion.getResplandor() != Tipus.SI) {
             bc.aprender(percepcion);
             step.acquire();
-            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
+            if (!automatic) {
+                pasito.acquire();
+            }
+            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades, null);
             bc.mostrarBC();
             for (int i = 0; i < 4 && !acabat; i++) {
                 //comunicar a la interfaz que ya no voy a estar en la casilla que estaba, no hace falta graficamente
@@ -68,12 +81,18 @@ public class covaMonstre {
                     //comunicar a la interfaz de la nueva casilla a la que voy a estar
                     acabat = solucion(a, b);
                     step.acquire();
-                    cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
+                    if (!automatic) {
+                        pasito.acquire();
+                    }
+                    cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades, null);
                 }
                 mov.nouMoviment();
             }
         } else {
-            cova.getTablero().notify(EventEnum.FOUND, null, bc.visitades);
+            if (!automatic) {
+                pasito.acquire();
+            }
+            cova.getTablero().notify(EventEnum.FOUND, null, bc.visitades, null);
             return true;
         }
         return acabat;

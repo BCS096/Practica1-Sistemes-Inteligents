@@ -24,6 +24,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,113 +46,140 @@ public class tablero extends JPanel implements MouseListener, Notify {
     private Semaphore espera;
     private int currentX = 0;
     private int currentY = 0;
+    private boolean esMapa = false;
     public int timer = 500;
+    private Habitacio[][] covaMapa;
 
-    public tablero(int n) {
-        this.addMouseListener(this);
-        this.setLayout(new FlowLayout());
-        this.setSize(sizeFrame);
-        this.setMinimumSize(sizeFrame);
-        this.setMaximumSize(sizeFrame);
-        //this.pack();
-        //this.setLocationRelativeTo(null);
-        this.setVisible(true);
-    }
-
-    public tablero(int n, data datos, Semaphore espera) {
+    public tablero(int n, data datos, Semaphore espera, Dimension mida) {
         this.espera = espera;
         this.datos = datos;
         this.addMouseListener(this);
         this.setLayout(new GridLayout(n, n));
-        this.setSize(sizeFrame);
-        this.setMinimumSize(sizeFrame);
-        this.setMaximumSize(sizeFrame);
-        xC = sizeFrame.height / n; //xC es el tamaño que tiene cada habitacion
+        this.setSize(mida);
+        this.setMinimumSize(mida);
+        this.setMaximumSize(mida);
+        xC = mida.height / n; //xC es el tamaño que tiene cada habitacion
         yC = xC;
         inicializarCasillas();
-        //this.pack();
-        //this.setLocationRelativeTo(null);
-       // this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
+    }
+
+    public tablero(int n, data datos, Semaphore espera, Dimension mida, boolean esMapa) {
+        this.esMapa = esMapa;
+        this.setLayout(new GridLayout(n, n));
+        this.setSize(mida);
+        this.setMinimumSize(mida);
+        this.setMaximumSize(mida);
+        xC = mida.height / n; //xC es el tamaño que tiene cada habitacion
+        yC = xC;
+        covaMapa = new Habitacio[n][n];
+        inicializarCasillas();
         this.setVisible(true);
     }
 
     private void inicializarCasillas() {
-        int y = 0;
-        for (int j = datos.cova.length - 1; j >= 0; j--) {
-            int x = 0;
-            for (int i = 0; i < datos.cova.length; i++) {
-                datos.cova[i][j] = new Habitacio(Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, new Rectangle2D.Float(x, y, xC, yC));
-                datos.cova[i][j].setHabitacio(xC);
-                datos.cova[i][j].setOpaque(true);
-                datos.cova[i][j].setSize(new Dimension(xC, yC));
-                paintCasillas(datos.cova[i][j], i, j);
-                this.add(datos.cova[i][j]);
-                x += xC;
+        if (esMapa) {
+            int y = 0;
+            for (int j = covaMapa.length - 1; j >= 0; j--) {
+                int x = 0;
+                for (int i = 0; i < covaMapa.length; i++) {
+                    covaMapa[i][j] = new Habitacio(Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, new Rectangle2D.Float(x, y, xC, yC));
+                    covaMapa[i][j].setHabitacio(xC);
+                    covaMapa[i][j].setOpaque(true);
+                    covaMapa[i][j].setSize(new Dimension(xC, yC));
+                    paintCasillas(covaMapa[i][j], i, j);
+                    this.add(covaMapa[i][j]);
+                    x += xC;
+                }
+                y += xC;
             }
-            y += xC;
+        } else {
+            int y = 0;
+            for (int j = datos.cova.length - 1; j >= 0; j--) {
+                int x = 0;
+                for (int i = 0; i < datos.cova.length; i++) {
+                    datos.cova[i][j] = new Habitacio(Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, new Rectangle2D.Float(x, y, xC, yC));
+                    datos.cova[i][j].setHabitacio(xC);
+                    datos.cova[i][j].setOpaque(true);
+                    datos.cova[i][j].setSize(new Dimension(xC, yC));
+                    datos.cova[i][j].x = i;
+                    datos.cova[i][j].y = j;
+                    paintCasillas(datos.cova[i][j], i, j);
+                    this.add(datos.cova[i][j]);
+                    x += xC;
+                }
+                y += xC;
+            }
+        }
+        this.repaint();
+    }
+
+    public void updateCasillas(HashMap<String, Habitacio> bc) {
+        if (esMapa) {
+            for (HashMap.Entry<String, Habitacio> set : bc.entrySet()) {
+                System.out.println("");
+                covaMapa[set.getValue().x][set.getValue().y].setColor(Color.yellow);
+                covaMapa[set.getValue().x][set.getValue().y].setInfo(set.getValue().getSpriteInfo());
+                covaMapa[set.getValue().x][set.getValue().y].setSprite(sprite.MAP);
+            }
+            this.repaint();
         }
     }
 
     private void paintCasillas(Habitacio casilla, int x, int y) {
-        if ((y + x + 1) % 2 == 0) {
-            casilla.setColor(new Color(165, 138, 138));
+        if (esMapa) {
+            casilla.setColor(new Color(0, 0, 0));
         } else {
-            casilla.setColor(new Color(158, 158, 158));
+            if ((y + x + 1) % 2 == 0) {
+                casilla.setColor(new Color(165, 138, 138));
+
+            } else {
+                casilla.setColor(new Color(158, 158, 158));
+            }
         }
 
-    }
-
-    private int[] centroDe(JLabel c) {
-        int xy[] = new int[2];
-        xy[0] = c.getX() + (c.getSize().width / 2) + 10;
-        xy[1] = c.getY() + (c.getSize().height / 2) + 30;
-        return xy;
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        Graphics2D g2d = (Graphics2D) g.create();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        int x = e.getX() - 8;
-        int y = e.getY() - 30;
-        boolean trobat = false;
-        int i, j = 0;
-        for (i = 0; i < datos.cova.length && !trobat; i++) {
-            for (j = 0; j < datos.cova.length && !trobat; j++) {
-                if (datos.cova[i][j].getRec().contains(x, y)) {
-                    System.out.println("El rectangulo tiene x: " + datos.cova[i][j].getRec().x + ", y: " + datos.cova[i][j].getRec().y + "  y widthxheight " + datos.cova[i][j].getRec().width + ", " + datos.cova[i][j].getRec().height);
-                    trobat = true;
+        if (esMapa) {
+        } else {
+            int x = e.getX() - 8;
+            int y = e.getY() - 30;
+            boolean trobat = false;
+            int i, j = 0;
+            for (i = 0; i < datos.cova.length && !trobat; i++) {
+                for (j = 0; j < datos.cova.length && !trobat; j++) {
+                    if (datos.cova[i][j].getRec().contains(x, y)) {
+                        trobat = true;
+                    }
                 }
             }
-        }
-        i--;
-        j--;
-        if (trobat) {
-            if (datos.elegirPrecipicis) {
-                datos.ponerPrecipicio(i, j);
-                datos.numPrecipicis--;
-                if (datos.numPrecipicis == 0) {
+            i--;
+            j--;
+            if (trobat) {
+                if (datos.elegirPrecipicis) {
+                    datos.ponerPrecipicio(i, j);
+                    datos.numPrecipicis--;
+                    if (datos.numPrecipicis == 0) {
+                        espera.release();
+                        datos.elegirPrecipicis = false;
+                    }
+                } else if (datos.elegirMonstre) {
+                    datos.ponerMonstruo(i, j);
+                    datos.numMonstres--;
+                    if (datos.numMonstres == 0) {
+                        datos.elegirMonstre = false;
+                        espera.release();
+                    }
+                } else if (datos.elegirTresor) {
+                    datos.ponerTesoro(i, j);
+                    datos.elegirTresor = false;
                     espera.release();
-                    datos.elegirPrecipicis = false;
                 }
-            } else if (datos.elegirMonstre) {
-                datos.ponerMonstruo(i, j);
-                datos.numMonstres--;
-                if (datos.numMonstres == 0){
-                    datos.elegirMonstre = false;
-                    espera.release();
-                }  
-            } else if (datos.elegirTresor) {
-                datos.ponerTesoro(i, j);
-                datos.elegirTresor = false;
-                espera.release();
             }
+            this.repaint();
         }
-        this.repaint();
     }
 
     @Override
@@ -186,7 +215,7 @@ public class tablero extends JPanel implements MouseListener, Notify {
     Habitacio agentDins = null;
 
     @Override
-    public void notify(EventEnum event, Habitacio h, ArrayList<Habitacio> camino) {
+    public void notify(EventEnum event, Habitacio h, ArrayList<Habitacio> camino, HashMap<String, Habitacio> bc) {
         switch (event) {
             case MOVER:
                 try {
@@ -231,6 +260,10 @@ public class tablero extends JPanel implements MouseListener, Notify {
                     tresor.setSprite();
                     tresor.setSprite(sprite.AGENT);
                     this.repaint();
+                    if (!monstre.covaMonstre.automatic) {
+                        monstre.covaMonstre.pasito.acquire();
+                        monstre.covaMonstre.pasito.release();
+                    }
                     Thread.sleep(timer);
                     tresor.setSprite();
                     this.repaint();
@@ -260,6 +293,10 @@ public class tablero extends JPanel implements MouseListener, Notify {
                     }
                 }
                 monstre.covaMonstre.step.release();
+                break;
+            //TODO: modify enumerates and also all calls to this with null if not the map itself QUICKLY NOW quickquickquick
+            case MAPA:
+                this.updateCasillas(bc);
                 break;
             default:
                 throw new AssertionError("Unexpected event in GUI: " + event.name());
