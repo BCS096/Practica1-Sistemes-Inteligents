@@ -25,6 +25,8 @@ public class covaMonstre {
     static BC bc = new BC();
     static interfaz cova;
     public static Semaphore step = new Semaphore(1);
+    public static Semaphore pasito = new Semaphore(0);
+    public static boolean automatic = false;
 
     public static void main(String[] args) throws InterruptedException {
         cova = new interfaz(espera);
@@ -58,6 +60,9 @@ public class covaMonstre {
         if (percepcion.getResplandor() != Tipus.SI) {
             bc.aprender(percepcion);
             step.acquire();
+            if (!automatic) {
+                pasito.acquire();
+            }
             cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
             bc.mostrarBC();
             for (int i = 0; i < 4 && !acabat; i++) {
@@ -68,11 +73,17 @@ public class covaMonstre {
                     //comunicar a la interfaz de la nueva casilla a la que voy a estar
                     acabat = solucion(a, b);
                     step.acquire();
+                    if (!automatic) {
+                        pasito.acquire();
+                    }
                     cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
                 }
                 mov.nouMoviment();
             }
         } else {
+            if (!automatic) {
+                pasito.acquire();
+            }
             cova.getTablero().notify(EventEnum.FOUND, null, bc.visitades);
             return true;
         }

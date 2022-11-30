@@ -6,6 +6,7 @@ package Data;
 
 import Vista.sprite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -146,21 +147,21 @@ public class Habitacio extends JPanel {
                     default:
                         break;
                 }
-                img = img.getScaledInstance(calculateSize(), calculateSize(), Image.SCALE_SMOOTH);
-                g.drawImage(img, calculatePos(), calculatePos(), null);
+                    img = img.getScaledInstance(calculateSize(), calculateSize(), Image.SCALE_SMOOTH);
+                    g.drawImage(img, calculatePos(), calculatePos(), null);
             }
         } catch (IOException e) {
             System.err.println("No existe la imagen!");
         }
     }
-    
-    private int calculateSize(){
+
+    private int calculateSize() {
         double temp = this.size * 0.25;
-        return (int) Math.ceil(size-temp);
+        return (int) Math.ceil(size - temp);
     }
-    
-    private int calculatePos(){
-        return (int) Math.ceil((this.size - calculateSize())/2);
+
+    private int calculatePos() {
+        return (int) Math.ceil((this.size - calculateSize()) / 2);
     }
 
     public String getInfo() {
