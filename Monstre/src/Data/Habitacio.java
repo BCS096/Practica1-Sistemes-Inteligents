@@ -30,6 +30,8 @@ public class Habitacio extends JPanel {
     private Rectangle2D.Float rec;
     private Color color;
     private sprite sprite;
+    private int i;
+    private int j;
 
     private int size = 0;
     private Image img;
@@ -54,6 +56,19 @@ public class Habitacio extends JPanel {
         this.sprite = null;
     }
 
+    public void setIJ(int[] ij){
+        this.i = ij[0];
+        this.j = ij[1];
+    }
+    
+    public int getI(){
+        return this.i;
+    }
+    
+    public int getJ(){
+        return this.j;
+    }
+    
     public void setSprite(sprite sprite) {
         this.sprite = sprite;
     }

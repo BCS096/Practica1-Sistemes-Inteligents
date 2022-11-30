@@ -12,6 +12,7 @@ import interfaces.EventEnum;
 import interfaces.Notify;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -68,6 +69,8 @@ public class tablero extends JPanel implements MouseListener, Notify {
             int x = 0;
             for (int i = 0; i < datos.cova.length; i++) {
                 datos.cova[i][j] = new Habitacio(Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, new Rectangle2D.Float(x, y, xC, yC));
+                int[] temp = {i, j};
+                datos.cova[i][j].setIJ(temp);
                 datos.cova[i][j].setHabitacio(xC);
                 datos.cova[i][j].setOpaque(true);
                 datos.cova[i][j].setSize(new Dimension(xC, yC));
@@ -95,36 +98,44 @@ public class tablero extends JPanel implements MouseListener, Notify {
         int y = e.getY() - 30;
         boolean trobat = false;
         int i, j = 0;
-        for (i = 0; i < datos.cova.length && !trobat; i++) {
-            for (j = 0; j < datos.cova.length && !trobat; j++) {
-                if (datos.cova[i][j].getRec().contains(x, y)) {
-                    trobat = true;
-                }
-            }
-        }
-        i--;
-        j--;
-        if (trobat) {
-            if (datos.elegirPrecipicis) {
-                datos.ponerPrecipicio(i, j);
-                datos.numPrecipicis--;
-                if (datos.numPrecipicis == 0) {
+        Component clicat = this.findComponentAt(x, y);
+        if (clicat instanceof Habitacio) {
+            Habitacio actual = (Habitacio) clicat;
+            i = actual.getI();
+            j = actual.getJ();
+            trobat = true;
+
+//        for (i = 0; i < datos.cova.length && !trobat; i++) {
+//            for (j = 0; j < datos.cova.length && !trobat; j++) {
+//                if (datos.cova[i][j].getRec().contains(x, y)) {
+//                    trobat = true;
+//                }
+//            }
+//        }
+//          i--;
+//          j--;
+            if (trobat) {
+                if (datos.elegirPrecipicis) {
+                    datos.ponerPrecipicio(i, j);
+                    datos.numPrecipicis--;
+                    if (datos.numPrecipicis == 0) {
+                        espera.release();
+                        datos.elegirPrecipicis = false;
+                    }
+                } else if (datos.elegirMonstre) {
+                    datos.ponerMonstruo(i, j);
+                    datos.numMonstres--;
+                    if (datos.numMonstres == 0) {
+                        datos.elegirMonstre = false;
+                        espera.release();
+                    }
+                } else if (datos.elegirTresor) {
+                    datos.ponerTesoro(i, j);
+                    datos.elegirTresor = false;
                     espera.release();
-                    datos.elegirPrecipicis = false;
                 }
-            } else if (datos.elegirMonstre) {
-                datos.ponerMonstruo(i, j);
-                datos.numMonstres--;
-                if (datos.numMonstres == 0) {
-                    datos.elegirMonstre = false;
-                    espera.release();
-                }
-            } else if (datos.elegirTresor) {
-                datos.ponerTesoro(i, j);
-                datos.elegirTresor = false;
-                espera.release();
+                this.repaint();
             }
-            this.repaint();
         }
     }
 
