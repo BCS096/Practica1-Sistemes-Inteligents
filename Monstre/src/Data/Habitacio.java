@@ -55,12 +55,14 @@ public class Habitacio extends JPanel {
         this.rec = null;
         this.sprite = null;
         this.bc = bc;
-        if (bc) {
-            info1 = new JLabel();
-            info2 = new JLabel();
-            this.add(info1);
-            this.add(info2);
-        }
+//        if (bc) {
+//            info1 = new JLabel();
+//            info1.setForeground(Color.BLUE);
+//            info2 = new JLabel();
+//            info2.setForeground(Color.BLUE);
+//            this.add(info1);
+//            this.add(info2);
+//        }
     }
 
     public void setSprite(sprite sprite) {
@@ -160,11 +162,22 @@ public class Habitacio extends JPanel {
                 g.drawImage(img, calculatePos(), calculatePos(), null);
             } else {
                 if (bc) {
-                    String aux = "M -> " + monstre;
-                    info1.setText(aux);
-                    aux = "P -> " + precipici;
-                    info2.setText(aux);
-                    //g.drawChars(getInfoBc().toCharArray(), 0, getInfoBc().length(), 0, 0);
+                    if (monstre == Tipus.BUIT && precipici == Tipus.BUIT) {
+                        this.setBackground(Color.BLACK);
+                    }else{
+                        this.setBackground(color);
+                    }
+                    if (monstre != Tipus.BUIT) {
+                        g.setColor(Color.BLACK);
+                        String aux = "M -> " + monstre;
+//                    info1.setText(aux);
+                        g.drawChars(aux.toCharArray(), 0, aux.length(), 5, 30);
+                    }
+                    if (precipici != Tipus.BUIT) {
+                        String aux = "P -> " + precipici;
+                        g.drawChars(aux.toCharArray(), 0, aux.length(), 5, 50);
+//                    info2.setText(aux);
+                    }
                 }
             }
         } catch (IOException e) {

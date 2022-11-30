@@ -113,7 +113,6 @@ public class Bc extends JFrame{
                 if(hab != null){
                     cova[i][j].setMonstre(hab.getMonstre());
                     cova[i][j].setPrecipici(hab.getPrecipici());
-                    cova[i][j].actualitzaInfo();
                 }  
             }
         }
