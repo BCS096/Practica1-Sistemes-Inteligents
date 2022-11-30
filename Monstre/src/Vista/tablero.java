@@ -38,7 +38,7 @@ import javax.swing.JPanel;
  *
  * @author emanu
  */
-public class tablero extends JPanel implements MouseListener, Notify {
+public class tablero extends JFrame implements MouseListener, Notify {
 
     private int xC;
     private int yC;
@@ -48,6 +48,7 @@ public class tablero extends JPanel implements MouseListener, Notify {
     private int currentX = 0;
     private int currentY = 0;
     public int timer = 500;
+
 
     public tablero(int n, data datos, Semaphore espera, Dimension mida) {
         this.espera = espera;
@@ -104,16 +105,6 @@ public class tablero extends JPanel implements MouseListener, Notify {
             i = actual.getI();
             j = actual.getJ();
             trobat = true;
-
-//        for (i = 0; i < datos.cova.length && !trobat; i++) {
-//            for (j = 0; j < datos.cova.length && !trobat; j++) {
-//                if (datos.cova[i][j].getRec().contains(x, y)) {
-//                    trobat = true;
-//                }
-//            }
-//        }
-//          i--;
-//          j--;
             if (trobat) {
                 if (datos.elegirPrecipicis) {
                     datos.ponerPrecipicio(i, j);

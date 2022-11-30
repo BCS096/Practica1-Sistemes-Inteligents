@@ -9,6 +9,7 @@ import Data.Habitacio;
 import Data.Percepcions;
 import Data.data;
 import Data.Tipus;
+import Vista.Bc;
 import Vista.interfaz;
 import interfaces.EventEnum;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class covaMonstre {
     static BC bc = new BC();
     static interfaz cova;
     public static Semaphore step = new Semaphore(1);
+    static Bc repBc;
     public static Semaphore pasito = new Semaphore(0);
     public static boolean automatic = false;
 
@@ -38,6 +40,8 @@ public class covaMonstre {
         espera.acquire();
         datos.elegirTresor = true;
         espera.acquire();
+        repBc = cova.bc;
+        repBc.repaint();
         while (!solucion(0, 0)) {
             bc.visitades = new ArrayList();
         }
@@ -64,6 +68,8 @@ public class covaMonstre {
                 pasito.acquire();
             }
             cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
+            repBc.pasarATablero(bc);
+            repBc.repaint();
             bc.mostrarBC();
             for (int i = 0; i < 4 && !acabat; i++) {
                 //comunicar a la interfaz que ya no voy a estar en la casilla que estaba, no hace falta graficamente

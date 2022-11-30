@@ -35,6 +35,7 @@ public class interfaz extends JFrame {
     private JTextField numPrecipici;
     private JTextField numMonstres;
     private tablero cova;
+    public Bc bc;
     private data datos;
     private JPanel contenedor;
     private Semaphore espera;
