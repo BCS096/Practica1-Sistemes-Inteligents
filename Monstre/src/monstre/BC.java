@@ -3,6 +3,7 @@ package monstre;
 import Data.Habitacio;
 import Data.Percepcions;
 import Data.Tipus;
+import Vista.Bc;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 public class BC {
 
     ArrayList<Habitacio> visitades;
-    HashMap<String, Habitacio> bc1;
+    public HashMap<String, Habitacio> bc1;
     ArrayList<OR> bc2;
     //coordenadas X e Y relativas del agente
     int coordX;
@@ -66,8 +67,9 @@ public class BC {
     private void poner(Percepcions per, Tipus type, String coords) {
         Habitacio valor;
         valor = bc1.get(coords);
+        char [] aux = coords.toCharArray();
         if (valor == null) {
-            valor = new Habitacio(Tipus.BUIT, Tipus.BUIT, Tipus.BUIT, Tipus.BUIT, Tipus.BUIT);
+            valor = new Habitacio(Tipus.BUIT, Tipus.BUIT, Tipus.BUIT, Tipus.BUIT, Tipus.BUIT, false);
             bc1.put(coords, valor);
         }
         switch (per) {
@@ -124,8 +126,11 @@ public class BC {
                                 if (coords.equals(or.habitacions.get(j))) {
                                     or.habitacions.remove(j);
                                     if (or.habitacions.size() == 1) {
-                                        Habitacio hab = bc1.get(coords);
+                                        String newCoords = or.habitacions.get(0);
+                                        Habitacio hab = bc1.get(newCoords);
                                         hab.setMonstre(Tipus.SI);
+                                        hab.setPrecipici(Tipus.NO);
+                                        comprovarORs(Percepcions.PRECIPICIO,newCoords);
                                         bc2.remove(i);
                                         break;
                                     }
@@ -145,8 +150,11 @@ public class BC {
                                 if (coords.equals(or.habitacions.get(j))) {
                                     or.habitacions.remove(j);
                                     if (or.habitacions.size() == 1) {
-                                        Habitacio hab = bc1.get(coords);
+                                        String newCoords = or.habitacions.get(0);
+                                        Habitacio hab = bc1.get(newCoords);
                                         hab.setPrecipici(Tipus.SI);
+                                        hab.setMonstre(Tipus.NO);
+                                        comprovarORs(Percepcions.MONSTRUO, newCoords);
                                         bc2.remove(i);
                                         break;
                                     }

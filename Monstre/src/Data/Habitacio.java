@@ -13,6 +13,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -29,7 +30,9 @@ public class Habitacio extends JPanel {
     private Rectangle2D.Float rec;
     private Color color;
     private sprite sprite;
-
+    boolean bc = false;
+    public JLabel info1 = null;
+    public JLabel info2 = null;
     private int size = 0;
     private Image img;
 
@@ -43,7 +46,7 @@ public class Habitacio extends JPanel {
         this.sprite = null;
     }
 
-    public Habitacio(Tipus hedor, Tipus brisa, Tipus monstre, Tipus precipici, Tipus resplandor) {
+    public Habitacio(Tipus hedor, Tipus brisa, Tipus monstre, Tipus precipici, Tipus resplandor, boolean bc) {
         this.hedor = hedor;
         this.brisa = brisa;
         this.monstre = monstre;
@@ -51,6 +54,13 @@ public class Habitacio extends JPanel {
         this.resplandor = resplandor;
         this.rec = null;
         this.sprite = null;
+        this.bc = bc;
+        if (bc) {
+            info1 = new JLabel();
+            info2 = new JLabel();
+            this.add(info1);
+            this.add(info2);
+        }
     }
 
     public void setSprite(sprite sprite) {
@@ -117,7 +127,7 @@ public class Habitacio extends JPanel {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paint(Graphics g) {
         //super.paint(g);
         img = null;
         g.setColor(color);
@@ -148,23 +158,35 @@ public class Habitacio extends JPanel {
                 }
                 img = img.getScaledInstance(calculateSize(), calculateSize(), Image.SCALE_SMOOTH);
                 g.drawImage(img, calculatePos(), calculatePos(), null);
+            } else {
+                if (bc) {
+                    String aux = "M -> " + monstre;
+                    info1.setText(aux);
+                    aux = "P -> " + precipici;
+                    info2.setText(aux);
+                    //g.drawChars(getInfoBc().toCharArray(), 0, getInfoBc().length(), 0, 0);
+                }
             }
         } catch (IOException e) {
             System.err.println("No existe la imagen!");
         }
     }
-    
-    private int calculateSize(){
+
+    private int calculateSize() {
         double temp = this.size * 0.25;
-        return (int) Math.ceil(size-temp);
+        return (int) Math.ceil(size - temp);
     }
-    
-    private int calculatePos(){
-        return (int) Math.ceil((this.size - calculateSize())/2);
+
+    private int calculatePos() {
+        return (int) Math.ceil((this.size - calculateSize()) / 2);
     }
 
     public String getInfo() {
         return "    hedor =" + hedor + "\n    brisa = " + brisa + "\n    monstre = " + monstre + "\n    precipici = " + precipici + "    resplandor = " + resplandor + "\n";
+    }
+
+    public String getInfoBc() {
+        return "H->" + hedor + "\n" + "M->" + monstre;
     }
 
     public void setHabitacio(int size) {
@@ -177,5 +199,12 @@ public class Habitacio extends JPanel {
 
     public boolean isTesoro() {
         return this.sprite == sprite.TRESOR ? true : false;
+    }
+
+    public void actualitzaInfo() {
+        String aux = "M -> " + monstre;
+        info1.setText(aux);
+        aux = "P -> " + precipici;
+        info2.setText(aux);
     }
 }

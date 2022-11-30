@@ -35,7 +35,7 @@ import javax.swing.JPanel;
  *
  * @author emanu
  */
-public class tablero extends JPanel implements MouseListener, Notify {
+public class tablero extends JFrame implements MouseListener, Notify {
 
     private int xC;
     private int yC;
@@ -52,8 +52,8 @@ public class tablero extends JPanel implements MouseListener, Notify {
         this.setSize(sizeFrame);
         this.setMinimumSize(sizeFrame);
         this.setMaximumSize(sizeFrame);
-        //this.pack();
-        //this.setLocationRelativeTo(null);
+        this.pack();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
@@ -68,9 +68,9 @@ public class tablero extends JPanel implements MouseListener, Notify {
         xC = sizeFrame.height / n; //xC es el tamaño que tiene cada habitacion
         yC = xC;
         inicializarCasillas();
-        //this.pack();
-        //this.setLocationRelativeTo(null);
-       // this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 

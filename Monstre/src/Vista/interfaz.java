@@ -35,6 +35,7 @@ public class interfaz extends JFrame {
     private JTextField numPrecipici;
     private JTextField numMonstres;
     private tablero cova;
+    public Bc bc;
     private data datos;
     private Semaphore espera;
     private Dimension size = new Dimension(800, 600);
@@ -94,6 +95,7 @@ public class interfaz extends JFrame {
                 setVisible(false);
                 dispose();
                 cova = new tablero(getSizeTablero(),datos, espera);
+                bc = new Bc(getSizeTablero(),datos);
                 espera.release();
                 cova.repaint();
             }
