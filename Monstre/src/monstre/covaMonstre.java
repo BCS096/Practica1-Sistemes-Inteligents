@@ -43,7 +43,7 @@ public class covaMonstre {
         repBc = cova.mapa;
         repBc.repaint();
         while (!solucion(0, 0)) {
-            //bc.visitades = new ArrayList();
+            bc.visitades = new ArrayList();
         }
 
     }
