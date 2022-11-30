@@ -57,14 +57,6 @@ public class covaMonstre {
             return false;
 
         }
-        if (cova.getMapa() != null) {
-            cova.getMapa().notify(EventEnum.MAPA, null, null, bc.bc1);
-            if(percepcion.getResplandor() == Tipus.SI){
-                System.out.println("SORRA");
-            }
-        } else {
-            //System.out.println("Mapa no invocado");
-        }
         if (percepcion.getResplandor() != Tipus.SI) {
             bc.aprender(percepcion);
             step.acquire();

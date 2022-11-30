@@ -130,15 +130,7 @@ public class interfaz extends JFrame {
         mostraBC.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame bc = new JFrame("Mapa");
-                mapaAgent = new tablero(getSizeTablero(), datos, null, new Dimension(600, 600), true);
-                bc.setLayout(new GridLayout(0, 1));
-                bc.setSize(new Dimension(600, 600));
-                bc.setPreferredSize(new Dimension(600, 600));
-                bc.setMaximumSize(new Dimension(600, 600));
-                bc.add(mapaAgent);
-                bc.pack();
-                bc.setVisible(true);
+
             }
         });
         interaccion.add(mostraBC);

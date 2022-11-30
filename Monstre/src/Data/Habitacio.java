@@ -30,9 +30,6 @@ public class Habitacio extends JPanel {
     private Rectangle2D.Float rec;
     private Color color;
     private sprite sprite;
-    private String[] info;
-    public int x;
-    public int y;
 
     private int size = 0;
     private Image img;
@@ -120,10 +117,6 @@ public class Habitacio extends JPanel {
         this.resplandor = resplandor;
     }
 
-    public void setInfo(String[] info) {
-        this.info = info;
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         //super.paint(g);
@@ -151,24 +144,11 @@ public class Habitacio extends JPanel {
                     case ONEUP:
                         img = ImageIO.read(new File("media/1up.png"));
                         break;
-                    case MAP:
-                        int currY = 0;
-                        g.setFont(new Font("Courier", Font.BOLD, 12));
-                        g.setColor(Color.BLACK);
-                        for (String txt : info) {
-                            g.drawChars(txt.toCharArray(), 0, txt.length(), 0, currY);
-                            currY += 10;
-                        }
-                        break;
                     default:
                         break;
                 }
-                if (sprite == sprite.MAP) {
-                    System.out.println("");
-                } else {
                     img = img.getScaledInstance(calculateSize(), calculateSize(), Image.SCALE_SMOOTH);
                     g.drawImage(img, calculatePos(), calculatePos(), null);
-                }
             }
         } catch (IOException e) {
             System.err.println("No existe la imagen!");
@@ -186,11 +166,6 @@ public class Habitacio extends JPanel {
 
     public String getInfo() {
         return "    hedor =" + hedor + "\n    brisa = " + brisa + "\n    monstre = " + monstre + "\n    precipici = " + precipici + "    resplandor = " + resplandor + "\n";
-    }
-
-    public String[] getSpriteInfo() {
-        String[] temp = {"Hedor: " + hedor, "Brisa: " + brisa, "Monstre: " + monstre, "Precipici: " + precipici, "Resplandor: " + resplandor};
-        return temp;
     }
 
     public void setHabitacio(int size) {
