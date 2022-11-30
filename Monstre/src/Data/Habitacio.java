@@ -6,6 +6,7 @@ package Data;
 
 import Vista.sprite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -31,8 +32,9 @@ public class Habitacio extends JPanel {
     private Color color;
     private sprite sprite;
     boolean bc = false;
-    public JLabel info1 = null;
-    public JLabel info2 = null;
+    private int i;
+    private int j;
+
     private int size = 0;
     private Image img;
 
@@ -65,6 +67,19 @@ public class Habitacio extends JPanel {
 //        }
     }
 
+    public void setIJ(int[] ij){
+        this.i = ij[0];
+        this.j = ij[1];
+    }
+    
+    public int getI(){
+        return this.i;
+    }
+    
+    public int getJ(){
+        return this.j;
+    }
+    
     public void setSprite(sprite sprite) {
         this.sprite = sprite;
     }

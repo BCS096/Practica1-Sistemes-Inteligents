@@ -37,9 +37,10 @@ public class interfaz extends JFrame {
     private tablero cova;
     public Bc bc;
     private data datos;
+    private JPanel contenedor;
     private Semaphore espera;
     private Dimension size = new Dimension(800, 600);
-    private Font fuente = new Font("Courier", Font.BOLD, 24);   
+    private Font fuente = new Font("Courier", Font.BOLD, 24);
 
     public interfaz(Semaphore espera) {
         this.espera = espera;
@@ -50,23 +51,28 @@ public class interfaz extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
-    
-    public tablero getTablero(){
+
+    public tablero getTablero() {
         return this.cova;
     }
 
     private void inicializar() {
-        this.setName("iniciCova");
+        this.setName("Cova del monstre");
         this.setSize(size);
         this.setPreferredSize(size);
         this.setMaximumSize(size);
+        contenedor = new JPanel();
+        contenedor.setSize(new Dimension(600, 600));
+        contenedor.setPreferredSize(new Dimension(600, 600));
+        contenedor.setLayout(new GridLayout(0, 1));
         Background background = new Background(new Dimension(600, 600));
         this.setLayout(new BorderLayout());
         JPanel interaccion = new JPanel();
         interaccion.setSize(new Dimension(200, 600));
         interaccion.setPreferredSize(new Dimension(200, 600));
-        interaccion.setLayout(new FlowLayout());
-        this.add(background, BorderLayout.WEST);
+        interaccion.setLayout(new FlowLayout(FlowLayout.CENTER));
+        contenedor.add(background);
+        this.add(contenedor, BorderLayout.WEST);
         JLabel askSize = new JLabel("Tamaño de la cueva:    ");
         resSize = new JTextField();
         resSize.setFont(fuente);
@@ -86,22 +92,60 @@ public class interfaz extends JFrame {
         interaccion.add(askMonstre);
         interaccion.add(numMonstres);
         JButton soluciones = new JButton("Mostrar cueva");
+        JButton paso = new JButton("Un paso");
+        JButton auto = new JButton("Automático");
+        paso.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                monstre.covaMonstre.automatic = false;
+                monstre.covaMonstre.pasito.release();
+            }
+        });
+        auto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!monstre.covaMonstre.automatic) {
+                    monstre.covaMonstre.automatic = true;
+                    monstre.covaMonstre.pasito.release();
+                }
+            }
+        });
         soluciones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                datos = new data(getSizeTablero());
-                datos.numPrecipicis = getNumPrecipicis();
-                datos.numMonstres = getNumMonstres();
-                setVisible(false);
-                dispose();
-                cova = new tablero(getSizeTablero(),datos, espera);
-                bc = new Bc(getSizeTablero(),datos);
+                nuevoTablero();
                 espera.release();
-                cova.repaint();
             }
         });
+        JButton mostraBC = new JButton("Mostra mapa");
+        JPanel modo = new JPanel();
+        modo.setPreferredSize(new Dimension(150, 110));
+        modo.setLayout(new GridLayout(3, 1, 0, 15));
+        modo.add(new JPanel());
+        modo.add(paso);
+        modo.add(auto);
         interaccion.add(soluciones);
+        interaccion.add(modo);
+        interaccion.add(new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0)));
+        mostraBC.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        interaccion.add(mostraBC);
         this.add(interaccion, BorderLayout.EAST);
+    }
+
+    private void nuevoTablero() {
+        datos = new data(getSizeTablero());
+        datos.numPrecipicis = getNumPrecipicis();
+        datos.numMonstres = getNumMonstres();
+        contenedor.removeAll();
+        cova = new tablero(getSizeTablero(), datos, espera, new Dimension(600, 600));
+        contenedor.add(cova);
+        this.repaint();
+        this.pack();
     }
 
     public int getSizeTablero() {
@@ -115,11 +159,12 @@ public class interfaz extends JFrame {
     public int getNumMonstres() {
         return Integer.parseInt(this.numMonstres.getText());
     }
+
     public void repintar() {
         cova.repaint();
     }
-    
-    public data getData(){
+
+    public data getData() {
         return datos;
     }
 }

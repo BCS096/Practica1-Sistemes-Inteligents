@@ -12,6 +12,7 @@ import interfaces.EventEnum;
 import interfaces.Notify;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -24,6 +25,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,31 +49,18 @@ public class tablero extends JFrame implements MouseListener, Notify {
     private int currentY = 0;
     public int timer = 500;
 
-    public tablero(int n) {
-        this.addMouseListener(this);
-        this.setLayout(new FlowLayout());
-        this.setSize(sizeFrame);
-        this.setMinimumSize(sizeFrame);
-        this.setMaximumSize(sizeFrame);
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-    }
 
-    public tablero(int n, data datos, Semaphore espera) {
+    public tablero(int n, data datos, Semaphore espera, Dimension mida) {
         this.espera = espera;
         this.datos = datos;
         this.addMouseListener(this);
         this.setLayout(new GridLayout(n, n));
-        this.setSize(sizeFrame);
-        this.setMinimumSize(sizeFrame);
-        this.setMaximumSize(sizeFrame);
-        xC = sizeFrame.height / n; //xC es el tamaño que tiene cada habitacion
+        this.setSize(mida);
+        this.setMinimumSize(mida);
+        this.setMaximumSize(mida);
+        xC = mida.height / n; //xC es el tamaño que tiene cada habitacion
         yC = xC;
         inicializarCasillas();
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
@@ -80,6 +70,8 @@ public class tablero extends JFrame implements MouseListener, Notify {
             int x = 0;
             for (int i = 0; i < datos.cova.length; i++) {
                 datos.cova[i][j] = new Habitacio(Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, Tipus.NO, new Rectangle2D.Float(x, y, xC, yC));
+                int[] temp = {i, j};
+                datos.cova[i][j].setIJ(temp);
                 datos.cova[i][j].setHabitacio(xC);
                 datos.cova[i][j].setOpaque(true);
                 datos.cova[i][j].setSize(new Dimension(xC, yC));
@@ -89,28 +81,16 @@ public class tablero extends JFrame implements MouseListener, Notify {
             }
             y += xC;
         }
+        this.repaint();
     }
 
     private void paintCasillas(Habitacio casilla, int x, int y) {
         if ((y + x + 1) % 2 == 0) {
             casilla.setColor(new Color(165, 138, 138));
+
         } else {
             casilla.setColor(new Color(158, 158, 158));
         }
-
-    }
-
-    private int[] centroDe(JLabel c) {
-        int xy[] = new int[2];
-        xy[0] = c.getX() + (c.getSize().width / 2) + 10;
-        xy[1] = c.getY() + (c.getSize().height / 2) + 30;
-        return xy;
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        Graphics2D g2d = (Graphics2D) g.create();
     }
 
     @Override
@@ -119,38 +99,35 @@ public class tablero extends JFrame implements MouseListener, Notify {
         int y = e.getY() - 30;
         boolean trobat = false;
         int i, j = 0;
-        for (i = 0; i < datos.cova.length && !trobat; i++) {
-            for (j = 0; j < datos.cova.length && !trobat; j++) {
-                if (datos.cova[i][j].getRec().contains(x, y)) {
-                    System.out.println("El rectangulo tiene x: " + datos.cova[i][j].getRec().x + ", y: " + datos.cova[i][j].getRec().y + "  y widthxheight " + datos.cova[i][j].getRec().width + ", " + datos.cova[i][j].getRec().height);
-                    trobat = true;
+        Component clicat = this.findComponentAt(x, y);
+        if (clicat instanceof Habitacio) {
+            Habitacio actual = (Habitacio) clicat;
+            i = actual.getI();
+            j = actual.getJ();
+            trobat = true;
+            if (trobat) {
+                if (datos.elegirPrecipicis) {
+                    datos.ponerPrecipicio(i, j);
+                    datos.numPrecipicis--;
+                    if (datos.numPrecipicis == 0) {
+                        espera.release();
+                        datos.elegirPrecipicis = false;
+                    }
+                } else if (datos.elegirMonstre) {
+                    datos.ponerMonstruo(i, j);
+                    datos.numMonstres--;
+                    if (datos.numMonstres == 0) {
+                        datos.elegirMonstre = false;
+                        espera.release();
+                    }
+                } else if (datos.elegirTresor) {
+                    datos.ponerTesoro(i, j);
+                    datos.elegirTresor = false;
+                    espera.release();
                 }
+                this.repaint();
             }
         }
-        i--;
-        j--;
-        if (trobat) {
-            if (datos.elegirPrecipicis) {
-                datos.ponerPrecipicio(i, j);
-                datos.numPrecipicis--;
-                if (datos.numPrecipicis == 0) {
-                    espera.release();
-                    datos.elegirPrecipicis = false;
-                }
-            } else if (datos.elegirMonstre) {
-                datos.ponerMonstruo(i, j);
-                datos.numMonstres--;
-                if (datos.numMonstres == 0){
-                    datos.elegirMonstre = false;
-                    espera.release();
-                }  
-            } else if (datos.elegirTresor) {
-                datos.ponerTesoro(i, j);
-                datos.elegirTresor = false;
-                espera.release();
-            }
-        }
-        this.repaint();
     }
 
     @Override
@@ -231,6 +208,10 @@ public class tablero extends JFrame implements MouseListener, Notify {
                     tresor.setSprite();
                     tresor.setSprite(sprite.AGENT);
                     this.repaint();
+                    if (!monstre.covaMonstre.automatic) {
+                        monstre.covaMonstre.pasito.acquire();
+                        monstre.covaMonstre.pasito.release();
+                    }
                     Thread.sleep(timer);
                     tresor.setSprite();
                     this.repaint();
