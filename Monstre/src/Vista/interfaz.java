@@ -91,6 +91,23 @@ public class interfaz extends JFrame {
         numMonstres.setPreferredSize(new Dimension(30, 30));
         interaccion.add(askMonstre);
         interaccion.add(numMonstres);
+        JPanel v = new JPanel();
+        v.setLayout(new FlowLayout());
+        JButton mas = new JButton("+");
+        mas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        JButton menos = new JButton("-");
+        menos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        v.add(mas);
+        v.add(menos);
+        this.add(v);
         JButton soluciones = new JButton("Mostrar cueva");
         JButton paso = new JButton("Un paso");
         JButton auto = new JButton("Automático");

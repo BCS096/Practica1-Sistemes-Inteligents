@@ -16,16 +16,16 @@ public class Moviments {
     
     public int nouMovX (){
         switch(numMoviment){
-            case 0 -> {
+            case 0 : {
                 return 1;
             }
-            case 1 -> {
+            case 1 : {
                 return 0;
             }
-            case 2 -> {
+            case 2 : {
                 return -1;
             }
-            case 3 -> {
+            case 3 : {
                 return 0;
             }
         }
@@ -34,16 +34,16 @@ public class Moviments {
     
     public int nouMovY (){
         switch(numMoviment){
-            case 0 -> {
+            case 0 : {
                 return 0;
             }
-            case 1 -> {
+            case 1 : {
                 return 1;
             }
-            case 2 -> {
+            case 2 : {
                 return 0;
             }
-            case 3 -> {
+            case 3 : {
                 return -1;
             }
         }
