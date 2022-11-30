@@ -49,6 +49,7 @@ public class tablero extends JPanel implements MouseListener, Notify {
     private int currentY = 0;
     public int timer = 500;
 
+
     public tablero(int n, data datos, Semaphore espera, Dimension mida) {
         this.espera = espera;
         this.datos = datos;
@@ -104,7 +105,6 @@ public class tablero extends JPanel implements MouseListener, Notify {
             i = actual.getI();
             j = actual.getJ();
             trobat = true;
-
             if (trobat) {
                 if (datos.elegirPrecipicis) {
                     datos.ponerPrecipicio(i, j);

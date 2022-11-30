@@ -35,6 +35,7 @@ public class interfaz extends JFrame {
     private JTextField numPrecipici;
     private JTextField numMonstres;
     private tablero cova;
+    public Bc mapa = null;
     private data datos;
     private JPanel contenedor;
     private Semaphore espera;
@@ -129,7 +130,8 @@ public class interfaz extends JFrame {
         mostraBC.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                boolean s = mapa.isVisible() ? false : true;
+                mapa.setVisible(s);
             }
         });
         interaccion.add(mostraBC);
@@ -145,6 +147,9 @@ public class interfaz extends JFrame {
         contenedor.add(cova);
         this.repaint();
         this.pack();
+        mapa = new Bc(getSizeTablero(), datos);
+        mapa.setVisible(false);
+        mapa.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     }
 
     public int getSizeTablero() {

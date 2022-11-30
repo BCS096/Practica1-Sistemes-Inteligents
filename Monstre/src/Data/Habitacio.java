@@ -14,6 +14,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -30,6 +31,7 @@ public class Habitacio extends JPanel {
     private Rectangle2D.Float rec;
     private Color color;
     private sprite sprite;
+    boolean bc = false;
     private int i;
     private int j;
 
@@ -46,7 +48,7 @@ public class Habitacio extends JPanel {
         this.sprite = null;
     }
 
-    public Habitacio(Tipus hedor, Tipus brisa, Tipus monstre, Tipus precipici, Tipus resplandor) {
+    public Habitacio(Tipus hedor, Tipus brisa, Tipus monstre, Tipus precipici, Tipus resplandor, boolean bc) {
         this.hedor = hedor;
         this.brisa = brisa;
         this.monstre = monstre;
@@ -54,6 +56,15 @@ public class Habitacio extends JPanel {
         this.resplandor = resplandor;
         this.rec = null;
         this.sprite = null;
+        this.bc = bc;
+//        if (bc) {
+//            info1 = new JLabel();
+//            info1.setForeground(Color.BLUE);
+//            info2 = new JLabel();
+//            info2.setForeground(Color.BLUE);
+//            this.add(info1);
+//            this.add(info2);
+//        }
     }
 
     public void setIJ(int[] ij){
@@ -133,7 +144,7 @@ public class Habitacio extends JPanel {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paint(Graphics g) {
         //super.paint(g);
         img = null;
         g.setColor(color);
@@ -162,8 +173,27 @@ public class Habitacio extends JPanel {
                     default:
                         break;
                 }
-                    img = img.getScaledInstance(calculateSize(), calculateSize(), Image.SCALE_SMOOTH);
-                    g.drawImage(img, calculatePos(), calculatePos(), null);
+                img = img.getScaledInstance(calculateSize(), calculateSize(), Image.SCALE_SMOOTH);
+                g.drawImage(img, calculatePos(), calculatePos(), null);
+            } else {
+                if (bc) {
+                    if (monstre == Tipus.BUIT && precipici == Tipus.BUIT) {
+                        this.setBackground(Color.BLACK);
+                    }else{
+                        this.setBackground(color);
+                    }
+                    if (monstre != Tipus.BUIT) {
+                        g.setColor(Color.BLACK);
+                        String aux = "M -> " + monstre;
+//                    info1.setText(aux);
+                        g.drawChars(aux.toCharArray(), 0, aux.length(), 5, 30);
+                    }
+                    if (precipici != Tipus.BUIT) {
+                        String aux = "P -> " + precipici;
+                        g.drawChars(aux.toCharArray(), 0, aux.length(), 5, 50);
+//                    info2.setText(aux);
+                    }
+                }
             }
         } catch (IOException e) {
             System.err.println("No existe la imagen!");
@@ -181,6 +211,10 @@ public class Habitacio extends JPanel {
 
     public String getInfo() {
         return "    hedor =" + hedor + "\n    brisa = " + brisa + "\n    monstre = " + monstre + "\n    precipici = " + precipici + "    resplandor = " + resplandor + "\n";
+    }
+
+    public String getInfoBc() {
+        return "H->" + hedor + "\n" + "M->" + monstre;
     }
 
     public void setHabitacio(int size) {
