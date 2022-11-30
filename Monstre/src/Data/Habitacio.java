@@ -67,19 +67,19 @@ public class Habitacio extends JPanel {
 //        }
     }
 
-    public void setIJ(int[] ij){
+    public void setIJ(int[] ij) {
         this.i = ij[0];
         this.j = ij[1];
     }
-    
-    public int getI(){
+
+    public int getI() {
         return this.i;
     }
-    
-    public int getJ(){
+
+    public int getJ() {
         return this.j;
     }
-    
+
     public void setSprite(sprite sprite) {
         this.sprite = sprite;
     }
@@ -150,6 +150,23 @@ public class Habitacio extends JPanel {
         g.setColor(color);
         g.fillRect(0, 0, size, size);
         try {
+            if (!this.isAgente()) {
+                if (this.hedor == Tipus.SI) {
+                    if (this.sprite == sprite.BRISA) {
+                        this.sprite = sprite.COMBINE;
+                    } else if (this.sprite == null) {
+                        this.sprite = sprite.HEDOR;
+                    }
+                } else {
+                    if (this.brisa == Tipus.SI) {
+                        if (this.sprite == sprite.HEDOR) {
+                            this.sprite = sprite.COMBINE;
+                        } else if (this.sprite == null) {
+                            this.sprite = sprite.BRISA;
+                        }
+                    }
+                }
+            }
             if (sprite != null) {
                 switch (sprite) {
                     case AGENT:
@@ -161,14 +178,20 @@ public class Habitacio extends JPanel {
                     case PRECIPICI:
                         img = ImageIO.read(new File("media/precipicio.png"));
                         break;
-                    case BRISA:
-                        img = ImageIO.read(new File("media/agente.png"));
-                        break;
                     case TRESOR:
                         img = ImageIO.read(new File("media/tesoro.png"));
                         break;
                     case ONEUP:
                         img = ImageIO.read(new File("media/1up.png"));
+                        break;
+                    case BRISA:
+                        img = ImageIO.read(new File("media/brisa.png"));
+                        break;
+                    case HEDOR:
+                        img = ImageIO.read(new File("media/toxic.png"));
+                        break;
+                    case COMBINE:
+                        img = ImageIO.read(new File("media/toxicWind.png"));
                         break;
                     default:
                         break;
@@ -179,7 +202,7 @@ public class Habitacio extends JPanel {
                 if (bc) {
                     if (monstre == Tipus.BUIT && precipici == Tipus.BUIT) {
                         this.setBackground(Color.BLACK);
-                    }else{
+                    } else {
                         this.setBackground(color);
                     }
                     if (monstre != Tipus.BUIT) {
