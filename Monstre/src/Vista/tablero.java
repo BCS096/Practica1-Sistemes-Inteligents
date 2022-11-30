@@ -49,7 +49,6 @@ public class tablero extends JPanel implements MouseListener, Notify {
     private int currentY = 0;
     public int timer = 500;
 
-
     public tablero(int n, data datos, Semaphore espera, Dimension mida) {
         this.espera = espera;
         this.datos = datos;
@@ -95,8 +94,8 @@ public class tablero extends JPanel implements MouseListener, Notify {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        int x = e.getX() - 8;
-        int y = e.getY() - 30;
+        int x = e.getX();
+        int y = e.getY();
         boolean trobat = false;
         int i, j = 0;
         Component clicat = this.findComponentAt(x, y);
@@ -163,7 +162,8 @@ public class tablero extends JPanel implements MouseListener, Notify {
     Habitacio agentDins = null;
 
     @Override
-    public void notify(EventEnum event, Habitacio h, ArrayList<Habitacio> camino) {
+    public void notify(EventEnum event, Habitacio h, ArrayList<Habitacio> path) {
+        ArrayList<Habitacio> camino = (ArrayList<Habitacio>) path.clone();
         switch (event) {
             case MOVER:
                 try {
@@ -201,7 +201,7 @@ public class tablero extends JPanel implements MouseListener, Notify {
                     }
                 }
                 try {
-                    temp.setSprite();
+                    nextRoom(camino).setSprite();
                     tresor.setSprite(sprite.ONEUP);
                     this.repaint();
                     Thread.sleep(timer);
@@ -220,6 +220,29 @@ public class tablero extends JPanel implements MouseListener, Notify {
                 }
                 monstre.covaMonstre.step.release();
                 break;
+            case COP:
+                try {
+                Habitacio copInminent = agentDins;
+                copInminent.setSprite();
+                copInminent.setSprite(sprite.GOLPE);
+                this.repaint();
+                Thread.sleep(timer);
+                copInminent.setSprite(sprite.AGENT);
+                Thread.sleep(timer);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.repaint();
+             {
+                try {
+                    Thread.sleep(timer);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+            monstre.covaMonstre.step.release();
+            break;
             case RETURN:
 
                 //TODO: corregir arraylist con null, pintar bien 

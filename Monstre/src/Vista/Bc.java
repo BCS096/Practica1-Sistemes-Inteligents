@@ -40,6 +40,7 @@ public class Bc extends JFrame{
     public Habitacio[][] cova;
 
     public Bc(int n, data datos) {
+        this.setName("Mapa");
         this.datos = datos;
         this.setLayout(new GridLayout(n, n));
         this.setSize(sizeFrame);

@@ -152,16 +152,16 @@ public class Habitacio extends JPanel {
         try {
             if (!this.isAgente()) {
                 if (this.hedor == Tipus.SI) {
-                    if (this.sprite == sprite.BRISA) {
+                    if (this.brisa == Tipus.SI) {
                         this.sprite = sprite.COMBINE;
-                    } else if (this.sprite == null) {
+                    } else {
                         this.sprite = sprite.HEDOR;
                     }
                 } else {
                     if (this.brisa == Tipus.SI) {
-                        if (this.sprite == sprite.HEDOR) {
+                        if (this.hedor == Tipus.SI) {
                             this.sprite = sprite.COMBINE;
-                        } else if (this.sprite == null) {
+                        } else {
                             this.sprite = sprite.BRISA;
                         }
                     }
@@ -192,6 +192,9 @@ public class Habitacio extends JPanel {
                         break;
                     case COMBINE:
                         img = ImageIO.read(new File("media/toxicWind.png"));
+                        break;
+                    case GOLPE:
+                        img = ImageIO.read(new File("media/golpe.png"));
                         break;
                     default:
                         break;

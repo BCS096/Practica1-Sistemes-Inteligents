@@ -43,7 +43,7 @@ public class covaMonstre {
         repBc = cova.mapa;
         repBc.repaint();
         while (!solucion(0, 0)) {
-            bc.visitades = new ArrayList();
+            //bc.visitades = new ArrayList();
         }
 
     }
@@ -58,6 +58,11 @@ public class covaMonstre {
             String s = "(" + x + "," + y + ")";
             bc.comprovarORs(Percepcions.MONSTRUO, s);
             bc.comprovarORs(Percepcions.PRECIPICIO, s);
+            step.acquire();
+            if (!automatic) {
+                pasito.acquire();
+            }
+            cova.getTablero().notify(EventEnum.COP, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
             return false;
 
         }
@@ -82,17 +87,27 @@ public class covaMonstre {
                     if (!automatic) {
                         pasito.acquire();
                     }
+                    
                     cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
                 }
                 mov.nouMoviment();
             }
         } else {
+            step.acquire();
             if (!automatic) {
                 pasito.acquire();
             }
+           
+            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
             cova.getTablero().notify(EventEnum.FOUND, null, bc.visitades);
             return true;
         }
+        step.acquire();
+        if (!automatic) {
+                pasito.acquire();
+            }
+        
+            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
         return acabat;
     }
 }

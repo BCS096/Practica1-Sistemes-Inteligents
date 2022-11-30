@@ -9,7 +9,8 @@ public enum sprite {
     ONEUP("Tresor obtingut"),
     MAP("Casella del mapa"),
     HEDOR("Toxic hedor"),
-    COMBINE("Hedor i brisa");
+    COMBINE("Hedor i brisa"),
+    GOLPE("Au, un cop, fa mal");
 
     private final String type;
 

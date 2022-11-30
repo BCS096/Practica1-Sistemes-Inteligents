@@ -17,13 +17,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.concurrent.Semaphore;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -93,22 +98,26 @@ public class interfaz extends JFrame {
         interaccion.add(numMonstres);
         JPanel v = new JPanel();
         v.setLayout(new FlowLayout());
-        JButton mas = new JButton("+");
-        mas.addActionListener(new ActionListener() {
+        JSlider velocitat = new JSlider(JSlider.VERTICAL, 0, 1000, 750);
+        velocitat.setMinorTickSpacing(125);
+        velocitat.setMajorTickSpacing(250);
+        Hashtable<Integer, JLabel> labels = new Hashtable<>();
+        labels.put(1000, new JLabel("-"));
+        labels.put(750, new JLabel("Lent"));
+        labels.put(500, new JLabel("Normal"));
+        labels.put(250, new JLabel("Ràpid"));
+        labels.put(0, new JLabel("+"));
+        velocitat.setInverted(true);
+        velocitat.setLabelTable(labels);
+        velocitat.setPaintTicks(true);
+        velocitat.setPaintLabels(true);
+        velocitat.addChangeListener(new ChangeListener(){
             @Override
-            public void actionPerformed(ActionEvent e) {
-                cova.timer = cova.timer - 5;
+            public void stateChanged(ChangeEvent e) {
+                cova.timer = velocitat.getValue();
             }
         });
-        JButton menos = new JButton("-");
-        menos.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cova.timer = cova.timer + 5;
-            }
-        });
-        v.add(mas);
-        v.add(menos);
+        v.add(velocitat);
         interaccion.add(v);
         JButton soluciones = new JButton("Mostrar cueva");
         JButton paso = new JButton("Un paso");
