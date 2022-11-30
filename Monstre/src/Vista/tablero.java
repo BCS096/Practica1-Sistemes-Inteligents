@@ -105,15 +105,6 @@ public class tablero extends JPanel implements MouseListener, Notify {
             j = actual.getJ();
             trobat = true;
 
-//        for (i = 0; i < datos.cova.length && !trobat; i++) {
-//            for (j = 0; j < datos.cova.length && !trobat; j++) {
-//                if (datos.cova[i][j].getRec().contains(x, y)) {
-//                    trobat = true;
-//                }
-//            }
-//        }
-//          i--;
-//          j--;
             if (trobat) {
                 if (datos.elegirPrecipicis) {
                     datos.ponerPrecipicio(i, j);
