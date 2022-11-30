@@ -37,7 +37,6 @@ public class interfaz extends JFrame {
     private tablero cova;
     private data datos;
     private JPanel contenedor;
-    private tablero mapaAgent;
     private Semaphore espera;
     private Dimension size = new Dimension(800, 600);
     private Font fuente = new Font("Courier", Font.BOLD, 24);
@@ -135,10 +134,6 @@ public class interfaz extends JFrame {
         });
         interaccion.add(mostraBC);
         this.add(interaccion, BorderLayout.EAST);
-    }
-
-    public tablero getMapa() {
-        return this.mapaAgent;
     }
 
     private void nuevoTablero() {
