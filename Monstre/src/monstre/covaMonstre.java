@@ -63,7 +63,7 @@ public class covaMonstre {
             if (!automatic) {
                 pasito.acquire();
             }
-            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades, null);
+            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
             bc.mostrarBC();
             for (int i = 0; i < 4 && !acabat; i++) {
                 //comunicar a la interfaz que ya no voy a estar en la casilla que estaba, no hace falta graficamente
@@ -76,7 +76,7 @@ public class covaMonstre {
                     if (!automatic) {
                         pasito.acquire();
                     }
-                    cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades, null);
+                    cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
                 }
                 mov.nouMoviment();
             }
@@ -84,7 +84,7 @@ public class covaMonstre {
             if (!automatic) {
                 pasito.acquire();
             }
-            cova.getTablero().notify(EventEnum.FOUND, null, bc.visitades, null);
+            cova.getTablero().notify(EventEnum.FOUND, null, bc.visitades);
             return true;
         }
         return acabat;

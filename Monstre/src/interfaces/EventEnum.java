@@ -3,8 +3,7 @@ package interfaces;
 public enum EventEnum {
     MOVER("Moure agent"),
     FOUND("Tresor trobat"),
-    RETURN("Tornar a inici"),
-    MAPA("El mapa");
+    RETURN("Tornar a inici");
 
     private final String text;
 

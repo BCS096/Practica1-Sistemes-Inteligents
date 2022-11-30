@@ -161,7 +161,7 @@ public class tablero extends JPanel implements MouseListener, Notify {
     Habitacio agentDins = null;
 
     @Override
-    public void notify(EventEnum event, Habitacio h, ArrayList<Habitacio> camino, HashMap<String, Habitacio> bc) {
+    public void notify(EventEnum event, Habitacio h, ArrayList<Habitacio> camino) {
         switch (event) {
             case MOVER:
                 try {
