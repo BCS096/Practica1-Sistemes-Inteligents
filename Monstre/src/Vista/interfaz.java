@@ -97,17 +97,19 @@ public class interfaz extends JFrame {
         mas.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                cova.timer = cova.timer - 5;
             }
         });
         JButton menos = new JButton("-");
         menos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                cova.timer = cova.timer + 5;
             }
         });
         v.add(mas);
         v.add(menos);
-        this.add(v);
+        interaccion.add(v);
         JButton soluciones = new JButton("Mostrar cueva");
         JButton paso = new JButton("Un paso");
         JButton auto = new JButton("Automático");
