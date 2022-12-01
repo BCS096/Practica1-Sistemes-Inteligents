@@ -63,6 +63,7 @@ public class covaMonstre {
                 pasito.acquire();
             }
             cova.getTablero().notify(EventEnum.COP, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
+            pasito.release();
             return false;
 
         }
@@ -87,7 +88,6 @@ public class covaMonstre {
                     if (!automatic) {
                         pasito.acquire();
                     }
-                    
                     cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
                 }
                 mov.nouMoviment();
@@ -104,7 +104,7 @@ public class covaMonstre {
         }
         step.acquire();
         if (!automatic) {
-                pasito.acquire();
+                //pasito.acquire();
             }
         
             cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
