@@ -154,14 +154,14 @@ public class Habitacio extends JPanel {
                 if (this.hedor == Tipus.SI) {
                     if (this.brisa == Tipus.SI) {
                         this.sprite = sprite.COMBINE;
-                    } else {
+                    } else if (!(this.sprite == sprite.MONSTRE || this.sprite == sprite.PRECIPICI || this.sprite == sprite.TRESOR)) {
                         this.sprite = sprite.HEDOR;
                     }
                 } else {
                     if (this.brisa == Tipus.SI) {
                         if (this.hedor == Tipus.SI) {
                             this.sprite = sprite.COMBINE;
-                        } else {
+                        } else if (!(this.sprite == sprite.MONSTRE || this.sprite == sprite.PRECIPICI || this.sprite == sprite.TRESOR)) {
                             this.sprite = sprite.BRISA;
                         }
                     }
@@ -199,10 +199,14 @@ public class Habitacio extends JPanel {
                     default:
                         break;
                 }
-                img = img.getScaledInstance(calculateSize(), calculateSize(), Image.SCALE_SMOOTH);
+                img = img.getScaledInstance(calculateSize(0.25), calculateSize(0.25), Image.SCALE_SMOOTH);
                 g.drawImage(img, calculatePos(), calculatePos(), null);
             } else {
                 if (bc) {
+                    //Para que size sea 1 y no pete
+                    String aux1 = " ";
+                    String aux2 = " ";
+                    boolean paint = true;
                     if (monstre == Tipus.BUIT && precipici == Tipus.BUIT) {
                         this.setBackground(Color.BLACK);
                     } else {
@@ -210,15 +214,40 @@ public class Habitacio extends JPanel {
                     }
                     if (monstre != Tipus.BUIT) {
                         g.setColor(Color.BLACK);
-                        String aux = "M -> " + monstre;
-//                    info1.setText(aux);
-                        g.drawChars(aux.toCharArray(), 0, aux.length(), 5, 30);
+                        aux1 = " M -> " + monstre;
+                        if (monstre == Tipus.BUIT || monstre == Tipus.POTSER) {
+                            img = ImageIO.read(new File("media/duda.png"));
+                        } else if (monstre == Tipus.SI) {
+                            img = ImageIO.read(new File("media/x.png"));
+                            paint = true;
+                        }
+                        if (img != null) {
+                            img = img.getScaledInstance(calculateSize(0.30), calculateSize(0.30), Image.SCALE_SMOOTH);
+                            g.drawImage(img, calculatePos(), calculatePos(), null);
+                        }
                     }
                     if (precipici != Tipus.BUIT) {
-                        String aux = "P -> " + precipici;
-                        g.drawChars(aux.toCharArray(), 0, aux.length(), 5, 50);
-//                    info2.setText(aux);
+                        aux2 = " P -> " + precipici;
+                        if (paint && (precipici == Tipus.BUIT || precipici == Tipus.POTSER)) {
+                            img = ImageIO.read(new File("media/duda.png"));
+                        } else if (precipici == Tipus.SI) {
+                            img = ImageIO.read(new File("media/x.png"));
+                        }
+                        if (img != null) {
+                            img = img.getScaledInstance(calculateSize(0.30), calculateSize(0.30), Image.SCALE_SMOOTH);
+                            g.drawImage(img, calculatePos(), calculatePos(), null);
+                        }
                     }
+                    //Si no ha entrat en cap if, es que la casella es segura (ha comprovat tots els casos menos que monstre i precipici siguin NO)
+                    if (img == null && monstre != Tipus.BUIT && precipici != Tipus.BUIT) {
+                        img = ImageIO.read(new File("media/check.png"));
+                        img = img.getScaledInstance(calculateSize(0.30), calculateSize(0.30), Image.SCALE_SMOOTH);
+                        g.drawImage(img, calculatePos(), calculatePos(), null);
+                    }
+                    g.setFont(new Font("Courier", Font.BOLD, (int) ((this.getWidth() / aux1.length()) * 1.75)));
+                    g.drawChars(aux1.toCharArray(), 0, aux1.length(), 0, (int) this.getHeight() / 4);
+                    g.setFont(new Font("Courier", Font.BOLD, (int) ((this.getWidth() / aux2.length()) * 1.75)));
+                    g.drawChars(aux2.toCharArray(), 0, aux2.length(), 5, (int) (this.getHeight() - (this.getHeight() / 4)));
                 }
             }
         } catch (IOException e) {
@@ -226,13 +255,13 @@ public class Habitacio extends JPanel {
         }
     }
 
-    private int calculateSize() {
-        double temp = this.size * 0.25;
+    private int calculateSize(double percent) {
+        double temp = this.size * percent;
         return (int) Math.ceil(size - temp);
     }
 
     private int calculatePos() {
-        return (int) Math.ceil((this.size - calculateSize()) / 2);
+        return (int) Math.ceil((this.size - calculateSize(0.25)) / 2);
     }
 
     public String getInfo() {

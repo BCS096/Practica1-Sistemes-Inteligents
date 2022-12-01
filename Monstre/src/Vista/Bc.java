@@ -32,7 +32,7 @@ import monstre.BC;
 public class Bc extends JFrame{
     private int xC;
     private int yC;
-    private final Dimension sizeFrame = new Dimension(512, 512);
+    private final Dimension sizeFrame = new Dimension(600, 600);
     private data datos;
     private int currentX = 0;
     private int currentY = 0;

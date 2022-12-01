@@ -10,7 +10,9 @@ public enum sprite {
     MAP("Casella del mapa"),
     HEDOR("Toxic hedor"),
     COMBINE("Hedor i brisa"),
-    GOLPE("Au, un cop, fa mal");
+    GOLPE("Au, un cop, fa mal"),
+    CHECK("Es segur"),
+    DUDA("No se sap res");
 
     private final String type;
 
