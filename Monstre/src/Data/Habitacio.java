@@ -150,7 +150,7 @@ public class Habitacio extends JPanel {
         g.setColor(color);
         g.fillRect(0, 0, size, size);
         try {
-            if (!this.isAgente()) {
+            if (!this.isAgente() && this.resplandor != Tipus.SI) {
                 if (this.hedor == Tipus.SI) {
                     if (this.brisa == Tipus.SI) {
                         this.sprite = sprite.COMBINE;

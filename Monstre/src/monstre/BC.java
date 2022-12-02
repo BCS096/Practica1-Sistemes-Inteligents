@@ -4,6 +4,7 @@ import Data.Habitacio;
 import Data.Percepcions;
 import Data.Tipus;
 import Vista.Bc;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 public class BC {
 
     ArrayList<Habitacio> visitades;
-    public HashMap<String, Habitacio> bc1;
+    public HashMap<Point, Habitacio> bc1;
     ArrayList<OR> bc2;
     //coordenadas X e Y relativas del agente
     int coordX;
@@ -30,15 +31,15 @@ public class BC {
     }
 
     public void aprender(Habitacio casilla) {
-        String[] mov = {"(" + coordX + "," + (coordY - 1) + ")", "(" + coordX + "," + (coordY + 1) + ")",
-            "(" + (coordX + 1) + "," + coordY + ")", "(" + (coordX - 1) + "," + coordY + ")"};
+        Point[] mov = {new Point(coordX, (coordY - 1)), new Point(coordX, (coordY + 1)),
+            new Point((coordX + 1), coordY), new Point((coordX - 1), coordY)};
         if (casilla.getHedor() == Tipus.NO) {
-            for (String mov1 : mov) {
+            for (Point mov1 : mov) {
                 comprovarORs(Percepcions.MONSTRUO, mov1);
                 poner(Percepcions.MONSTRUO, Tipus.NO, mov1);
             }
         } else {  // hedor == Tipus.SI
-            ArrayList<String> aux = new ArrayList<>();
+            ArrayList<Point> aux = new ArrayList<>();
             aux.addAll(Arrays.asList(mov));
             aux = comprovarPossiblesEliminacions(aux, Percepcions.MONSTRUO);
             bc2.add(new OR(Percepcions.MONSTRUO, aux));
@@ -48,12 +49,12 @@ public class BC {
 
         }
         if (casilla.getBrisa() == Tipus.NO) {
-            for (String mov1 : mov) {
+            for (Point mov1 : mov) {
                 comprovarORs(Percepcions.PRECIPICIO, mov1);
                 poner(Percepcions.PRECIPICIO, Tipus.NO, mov1);
             }
         } else {  // brisa == Tipus.SI
-            ArrayList<String> aux = new ArrayList<>();
+            ArrayList<Point> aux = new ArrayList<>();
             aux.addAll(Arrays.asList(mov));
             aux = comprovarPossiblesEliminacions(aux, Percepcions.PRECIPICIO);
             bc2.add(new OR(Percepcions.PRECIPICIO, aux));
@@ -61,13 +62,12 @@ public class BC {
                 poner(Percepcions.PRECIPICIO, Tipus.POTSER, aux.get(i));
             }
         }
-        bc1.put("(" + coordX + "," + coordY + ")", casilla);
+        bc1.put(new Point(coordX, coordY), casilla);
     }
 
-    private void poner(Percepcions per, Tipus type, String coords) {
+    private void poner(Percepcions per, Tipus type, Point coords) {
         Habitacio valor;
         valor = bc1.get(coords);
-        char [] aux = coords.toCharArray();
         if (valor == null) {
             valor = new Habitacio(Tipus.BUIT, Tipus.BUIT, Tipus.BUIT, Tipus.BUIT, Tipus.BUIT, false);
             bc1.put(coords, valor);
@@ -86,7 +86,7 @@ public class BC {
         }
     }
 
-    private ArrayList<String> comprovarPossiblesEliminacions(ArrayList<String> aux, Percepcions per) {
+    private ArrayList<Point> comprovarPossiblesEliminacions(ArrayList<Point> aux, Percepcions per) {
         //TO DO : aux.size puede cambiar durante el bucle, antes del bucle guardarla en una variable
         //mirar si en otro bucle pasa eso
         for (int i = 0; i < aux.size() && i >= 0; i++) {
@@ -114,7 +114,7 @@ public class BC {
         this.coordY = y;
     }
 
-    public void comprovarORs(Percepcions per, String coords) {
+    public void comprovarORs(Percepcions per, Point coords) {
         Habitacio aux = bc1.get(coords);
         switch (per) {
             case MONSTRUO:
@@ -126,7 +126,7 @@ public class BC {
                                 if (coords.equals(or.habitacions.get(j))) {
                                     or.habitacions.remove(j);
                                     if (or.habitacions.size() == 1) {
-                                        String newCoords = or.habitacions.get(0);
+                                        Point newCoords = or.habitacions.get(0);
                                         Habitacio hab = bc1.get(newCoords);
                                         hab.setMonstre(Tipus.SI);
                                         hab.setPrecipici(Tipus.NO);
@@ -150,7 +150,7 @@ public class BC {
                                 if (coords.equals(or.habitacions.get(j))) {
                                     or.habitacions.remove(j);
                                     if (or.habitacions.size() == 1) {
-                                        String newCoords = or.habitacions.get(0);
+                                        Point newCoords = or.habitacions.get(0);
                                         Habitacio hab = bc1.get(newCoords);
                                         hab.setPrecipici(Tipus.SI);
                                         hab.setMonstre(Tipus.NO);
@@ -168,7 +168,7 @@ public class BC {
     }
 
     public boolean moviment_viable(int x, int y) {
-        Habitacio revisar = this.bc1.get("("+x+","+y+")");
+        Habitacio revisar = this.bc1.get(new Point(x, y));
         if (!visitades.contains(revisar)) { //La habitació no ha estat visitada encara
             //EL MOVIMIENTO ES VIABLE SIEMPRE QUE EN LA CASIILA PROPORCIONADA NO HAY NI MONSTRU NI PRECIPICIO Y NO HA SIDO VISITADA
             if (revisar.getMonstre() == Data.Tipus.NO && revisar.getPrecipici() == Data.Tipus.NO) {

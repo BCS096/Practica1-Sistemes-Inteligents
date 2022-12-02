@@ -7,22 +7,13 @@ package Vista;
 import Data.Habitacio;
 import Data.Tipus;
 import Data.data;
-import interfaces.EventEnum;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
+import java.awt.Point;
 import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import monstre.BC;
 
 /**
@@ -32,7 +23,7 @@ import monstre.BC;
 public class Bc extends JFrame{
     private int xC;
     private int yC;
-    private final Dimension sizeFrame = new Dimension(600, 600);
+    private final Dimension sizeFrame = new Dimension(512, 512);
     private data datos;
     private int currentX = 0;
     private int currentY = 0;
@@ -109,7 +100,7 @@ public class Bc extends JFrame{
     public void pasarATablero(BC bc) {
         for (int i = 0; i < cova.length; i++) {
             for (int j = 0; j < cova.length; j++) {
-                String key = "("+i+","+j+")";
+                Point key = new Point(i, j);
                 Habitacio hab = bc.bc1.get(key);
                 if(hab != null){
                     cova[i][j].setMonstre(hab.getMonstre());

@@ -12,6 +12,7 @@ import Data.Tipus;
 import Vista.Bc;
 import Vista.interfaz;
 import interfaces.EventEnum;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -29,22 +30,19 @@ public class covaMonstre {
     static Bc repBc;
     public static Semaphore pasito = new Semaphore(0);
     public static boolean automatic = false;
+    private static final boolean DEBUG = false;
 
     public static void main(String[] args) throws InterruptedException {
         cova = new interfaz(espera);
-        espera.acquire();
-        datos = cova.getData();
-        datos.elegirPrecipicis = true;
-        espera.acquire();
-        datos.elegirMonstre = true;
-        espera.acquire();
-        datos.elegirTresor = true;
+        Thread pintar = new Thread(cova);
+        pintar.start();
         espera.acquire();
         repBc = cova.mapa;
-        repBc.repaint();
+        datos = cova.getDatos();
         while (!solucion(0, 0)) {
             bc.visitades = new ArrayList();
         }
+        pintar.join();
 
     }
 
@@ -55,14 +53,13 @@ public class covaMonstre {
         boolean acabat = false;
         bc.setPosicioActual(x, y);
         if (percepcion == null) { //si m'he donat un cop
-            String s = "(" + x + "," + y + ")";
-            bc.comprovarORs(Percepcions.MONSTRUO, s);
-            bc.comprovarORs(Percepcions.PRECIPICIO, s);
+            bc.comprovarORs(Percepcions.MONSTRUO, new Point(x, y));
+            bc.comprovarORs(Percepcions.PRECIPICIO, new Point(x, y));
             step.acquire();
             if (!automatic) {
                 pasito.acquire();
             }
-            cova.getTablero().notify(EventEnum.COP, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
+            cova.getTablero().notify(EventEnum.COP, bc.bc1.get(new Point(x, y)), bc.visitades);
             pasito.release();
             return false;
 
@@ -73,10 +70,12 @@ public class covaMonstre {
             if (!automatic) {
                 pasito.acquire();
             }
-            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
+            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get(new Point(x, y)), bc.visitades);
             repBc.pasarATablero(bc);
             repBc.repaint();
-            bc.mostrarBC();
+            if (DEBUG) {
+                bc.mostrarBC();
+            }
             for (int i = 0; i < 4 && !acabat; i++) {
                 //comunicar a la interfaz que ya no voy a estar en la casilla que estaba, no hace falta graficamente
                 int a = x + mov.nouMovX();
@@ -88,7 +87,7 @@ public class covaMonstre {
                     if (!automatic) {
                         pasito.acquire();
                     }
-                    cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
+                    cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get(new Point(x, y)), bc.visitades);
                 }
                 mov.nouMoviment();
             }
@@ -97,17 +96,17 @@ public class covaMonstre {
             if (!automatic) {
                 pasito.acquire();
             }
-           
-            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
+
+            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get(new Point(x, y)), bc.visitades);
             cova.getTablero().notify(EventEnum.FOUND, null, bc.visitades);
             return true;
         }
         step.acquire();
         if (!automatic) {
-                //pasito.acquire();
-            }
-        
-            cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get("(" + x + "," + y + ")"), bc.visitades);
+            //pasito.acquire();
+        }
+
+        cova.getTablero().notify(EventEnum.MOVER, bc.bc1.get(new Point(x, y)), bc.visitades);
         return acabat;
     }
 }

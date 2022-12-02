@@ -10,21 +10,20 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.concurrent.Semaphore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -34,7 +33,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author emanu
  */
-public class interfaz extends JFrame {
+public class interfaz extends JFrame implements Runnable {
 
     private JTextField resSize;
     private JTextField numPrecipici;
@@ -44,8 +43,10 @@ public class interfaz extends JFrame {
     private data datos;
     private JPanel contenedor;
     private Semaphore espera;
+    public static boolean firstTresor = true;
     private Dimension size = new Dimension(800, 600);
     private Font fuente = new Font("Courier", Font.BOLD, 24);
+    JPanel interaccion = new JPanel();
 
     public interfaz(Semaphore espera) {
         this.espera = espera;
@@ -72,7 +73,6 @@ public class interfaz extends JFrame {
         contenedor.setLayout(new GridLayout(0, 1));
         Background background = new Background(new Dimension(600, 600));
         this.setLayout(new BorderLayout());
-        JPanel interaccion = new JPanel();
         interaccion.setSize(new Dimension(200, 600));
         interaccion.setPreferredSize(new Dimension(200, 600));
         interaccion.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -84,92 +84,196 @@ public class interfaz extends JFrame {
         resSize.setPreferredSize(new Dimension(30, 30));
         interaccion.add(askSize);
         interaccion.add(resSize);
-        JLabel askPrecipici = new JLabel("Número de precipicis: ");
-        numPrecipici = new JTextField();
-        numPrecipici.setFont(fuente);
-        numPrecipici.setPreferredSize(new Dimension(30, 30));
-        interaccion.add(askPrecipici);
-        interaccion.add(numPrecipici);
-        JLabel askMonstre = new JLabel("Número de monstres: ");
-        numMonstres = new JTextField();
-        numMonstres.setFont(fuente);
-        numMonstres.setPreferredSize(new Dimension(30, 30));
-        interaccion.add(askMonstre);
-        interaccion.add(numMonstres);
-        JPanel v = new JPanel();
-        v.setLayout(new FlowLayout());
-        JSlider velocitat = new JSlider(JSlider.VERTICAL, 0, 1000, 750);
-        velocitat.setMinorTickSpacing(125);
-        velocitat.setMajorTickSpacing(250);
-        Hashtable<Integer, JLabel> labels = new Hashtable<>();
-        labels.put(1000, new JLabel("-"));
-        labels.put(750, new JLabel("Lent"));
-        labels.put(500, new JLabel("Normal"));
-        labels.put(250, new JLabel("Ràpid"));
-        labels.put(0, new JLabel("+"));
-        velocitat.setInverted(true);
-        velocitat.setLabelTable(labels);
-        velocitat.setPaintTicks(true);
-        velocitat.setPaintLabels(true);
-        velocitat.addChangeListener(new ChangeListener(){
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                cova.timer = velocitat.getValue();
-            }
-        });
-        v.add(velocitat);
-        interaccion.add(v);
         JButton soluciones = new JButton("Mostrar cueva");
-        JButton paso = new JButton("Un paso");
-        JButton auto = new JButton("Automático");
-        paso.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                monstre.covaMonstre.automatic = false;
-                monstre.covaMonstre.pasito.release();
-            }
-        });
-        auto.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!monstre.covaMonstre.automatic) {
-                    monstre.covaMonstre.automatic = true;
-                    monstre.covaMonstre.pasito.release();
-                }
-            }
-        });
         soluciones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                nuevoTablero();
-                espera.release();
+                try {
+                    nuevoTablero();
+                    interaccion.removeAll();
+                    inicializarCova();
+                } catch (NumberFormatException e) {
+                    System.err.println("No es pot traduïr a número!");
+                }
+
             }
         });
-        JButton mostraBC = new JButton("Mostra mapa");
-        JPanel modo = new JPanel();
-        modo.setPreferredSize(new Dimension(150, 110));
-        modo.setLayout(new GridLayout(3, 1, 0, 15));
-        modo.add(new JPanel());
-        modo.add(paso);
-        modo.add(auto);
         interaccion.add(soluciones);
-        interaccion.add(modo);
-        interaccion.add(new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0)));
-        mostraBC.addActionListener(new ActionListener() {
+        this.add(interaccion, BorderLayout.EAST);
+    }
+
+    private void inicializarCova() {
+        JRadioButton precipicis = new JRadioButton("Precipici");
+        JRadioButton monstres = new JRadioButton("Monstre");
+        JRadioButton tresor = new JRadioButton("Tresor");
+        ButtonGroup opcions = new ButtonGroup();
+        precipicis.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean s = mapa.isVisible() ? false : true;
-                mapa.setVisible(s);
+                if (precipicis.isSelected()) {
+                    datos.elegirPrecipicis = true;
+                    datos.elegirMonstre = false;
+                    datos.elegirTresor = false;
+                }
             }
         });
+        monstres.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (monstres.isSelected()) {
+                    datos.elegirPrecipicis = false;
+                    datos.elegirMonstre = true;
+                    datos.elegirTresor = false;
+                }
+            }
+        });
+        tresor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (tresor.isSelected() && firstTresor) {
+                    datos.elegirPrecipicis = false;
+                    datos.elegirMonstre = false;
+                    datos.elegirTresor = true;
+                } else {
+                    opcions.clearSelection();
+                    tresor.setEnabled(false);
+                }
+
+            }
+        });
+        JPanel radios = new JPanel();
+
+        radios.setPreferredSize(
+                new Dimension(150, 100));
+        radios.setLayout(
+                new GridLayout(3, 0));
+        radios.add(precipicis);
+
+        radios.add(monstres);
+
+        radios.add(tresor);
+
+        opcions.add(precipicis);
+
+        opcions.add(monstres);
+
+        opcions.add(tresor);
+
+        interaccion.add(radios);
+        JPanel v = new JPanel();
+
+        v.setLayout(
+                new FlowLayout());
+        JSlider velocitat = new JSlider(JSlider.VERTICAL, 0, 1250, 750);
+
+        velocitat.setMinorTickSpacing(
+                125);
+        velocitat.setMajorTickSpacing(
+                250);
+        Hashtable<Integer, JLabel> labels = new Hashtable<>();
+
+        labels.put(
+                1250, new JLabel("-"));
+        labels.put(
+                1000, new JLabel("Lent"));
+        labels.put(
+                750, new JLabel("Normal"));
+        labels.put(
+                250, new JLabel("Ràpid"));
+        labels.put(
+                0, new JLabel("+"));
+        velocitat.setInverted(
+                true);
+        velocitat.setLabelTable(labels);
+
+        velocitat.setPaintTicks(
+                true);
+        velocitat.setPaintLabels(
+                true);
+        velocitat.addChangeListener(
+                new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e
+            ) {
+                cova.timer = velocitat.getValue();
+            }
+        }
+        );
+        v.add(velocitat);
+
+        interaccion.add(v);
+
+        JButton paso = new JButton("Un paso");
+        JCheckBox auto = new JCheckBox("Automático");
+
+        paso.addActionListener(
+                new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e
+            ) {
+                try {
+                    cova.mutex.acquire();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(interfaz.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                monstre.covaMonstre.automatic = false;
+                monstre.covaMonstre.pasito.release();
+                cova.mutex.release();
+            }
+        }
+        );
+        auto.addActionListener(
+                new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e
+            ) {
+                monstre.covaMonstre.automatic = auto.isSelected();
+                if (auto.isSelected()) {
+                    monstre.covaMonstre.pasito.release();
+                }
+            }
+        }
+        );
+
+        JButton mostraBC = new JButton("Mostra mapa");
+        JPanel modo = new JPanel();
+
+        modo.setPreferredSize(
+                new Dimension(150, 110));
+        modo.setLayout(
+                new GridLayout(3, 1, 0, 15));
+        modo.add(
+                new JPanel());
+        modo.add(paso);
+
+        modo.add(auto);
+
+        interaccion.add(modo);
+
+        interaccion.add(
+                new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0)));
+        mostraBC.addActionListener(
+                new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e
+            ) {
+                if (mapa != null) {
+                    mapa.setVisible(!mapa.isVisible());
+                }
+            }
+        }
+        );
         interaccion.add(mostraBC);
-        this.add(interaccion, BorderLayout.EAST);
+
+        this.repaint();
+
+        this.pack();
     }
 
     private void nuevoTablero() {
         datos = new data(getSizeTablero());
-        datos.numPrecipicis = getNumPrecipicis();
-        datos.numMonstres = getNumMonstres();
+        datos.numPrecipicis = 0;
+        datos.numMonstres = 0;
         contenedor.removeAll();
         cova = new tablero(getSizeTablero(), datos, espera, new Dimension(600, 600));
         contenedor.add(cova);
@@ -178,18 +282,12 @@ public class interfaz extends JFrame {
         mapa = new Bc(getSizeTablero(), datos);
         mapa.setVisible(false);
         mapa.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        espera.release();
+
     }
 
     public int getSizeTablero() {
         return Integer.parseInt(this.resSize.getText());
-    }
-
-    public int getNumPrecipicis() {
-        return Integer.parseInt(this.numPrecipici.getText());
-    }
-
-    public int getNumMonstres() {
-        return Integer.parseInt(this.numMonstres.getText());
     }
 
     public void repintar() {
@@ -198,5 +296,14 @@ public class interfaz extends JFrame {
 
     public data getData() {
         return datos;
+    }
+
+    public data getDatos() {
+        return this.datos;
+    }
+
+    @Override
+    public void run() {
+
     }
 }

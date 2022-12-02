@@ -6,6 +6,7 @@ package monstre;
 
 import Data.Percepcions;
 import Data.Tipus;
+import java.awt.Point;
 import java.util.ArrayList;
 
 /**
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  */
 public class OR {
     Percepcions tipus;
-    ArrayList <String> habitacions;
+    ArrayList <Point> habitacions;
     
     public OR (Percepcions tipus, ArrayList habitacions){
         this.tipus = tipus;

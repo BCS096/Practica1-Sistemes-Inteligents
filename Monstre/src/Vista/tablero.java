@@ -10,28 +10,17 @@ import Data.Tipus;
 import Data.data;
 import interfaces.EventEnum;
 import interfaces.Notify;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -48,6 +37,7 @@ public class tablero extends JPanel implements MouseListener, Notify {
     private int currentX = 0;
     private int currentY = 0;
     public int timer = 500;
+    public static Semaphore mutex = new Semaphore(1);
 
     public tablero(int n, data datos, Semaphore espera, Dimension mida) {
         this.espera = espera;
@@ -105,16 +95,17 @@ public class tablero extends JPanel implements MouseListener, Notify {
             j = actual.getJ();
             trobat = true;
             if (trobat) {
+                //TODO: Control espera releases inside interfaz or here, after tresor is put nothing happens, meaning it is waiting pending on acquire()
                 if (datos.elegirPrecipicis) {
                     datos.ponerPrecipicio(i, j);
-                    datos.numPrecipicis--;
+                    datos.numPrecipicis++;
                     if (datos.numPrecipicis == 0) {
                         espera.release();
                         datos.elegirPrecipicis = false;
                     }
                 } else if (datos.elegirMonstre) {
                     datos.ponerMonstruo(i, j);
-                    datos.numMonstres--;
+                    datos.numMonstres++;
                     if (datos.numMonstres == 0) {
                         datos.elegirMonstre = false;
                         espera.release();
@@ -122,6 +113,7 @@ public class tablero extends JPanel implements MouseListener, Notify {
                 } else if (datos.elegirTresor) {
                     datos.ponerTesoro(i, j);
                     datos.elegirTresor = false;
+                    interfaz.firstTresor = false;
                     espera.release();
                 }
                 this.repaint();
@@ -163,6 +155,11 @@ public class tablero extends JPanel implements MouseListener, Notify {
 
     @Override
     public void notify(EventEnum event, Habitacio h, ArrayList<Habitacio> path) {
+        try {
+            mutex.acquire();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(tablero.class.getName()).log(Level.SEVERE, null, ex);
+        }
         ArrayList<Habitacio> camino = (ArrayList<Habitacio>) path.clone();
         switch (event) {
             case MOVER:
@@ -268,6 +265,7 @@ public class tablero extends JPanel implements MouseListener, Notify {
             default:
                 throw new AssertionError("Unexpected event in GUI: " + event.name());
         }
+        mutex.release();
     }
 
     /*
