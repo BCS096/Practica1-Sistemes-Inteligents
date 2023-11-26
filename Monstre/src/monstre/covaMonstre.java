@@ -22,19 +22,20 @@ import java.util.concurrent.Semaphore;
  */
 public class covaMonstre {
 
-    static Semaphore espera = new Semaphore(0);
-    static data datos;
-    static BC bc = new BC();
-    static interfaz cova;
+    public static Semaphore espera = new Semaphore(0);
+    public static data datos;
+    public static BC bc = new BC();
+    public static interfaz cova;
     public static Semaphore step = new Semaphore(1);
-    static Bc repBc;
+    public static Bc repBc;
     public static Semaphore pasito = new Semaphore(0);
     public static boolean automatic = false;
     private static final boolean DEBUG = false;
+    public static Thread pintar;
 
     public static void main(String[] args) throws InterruptedException {
         cova = new interfaz(espera);
-        Thread pintar = new Thread(cova);
+        pintar = new Thread(cova);
         pintar.start();
         espera.acquire();
         repBc = cova.mapa;

@@ -13,6 +13,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
@@ -28,6 +29,15 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import monstre.BC;
+import monstre.covaMonstre;
+import static monstre.covaMonstre.bc;
+import static monstre.covaMonstre.cova;
+import static monstre.covaMonstre.datos;
+import static monstre.covaMonstre.espera;
+import static monstre.covaMonstre.pintar;
+import static monstre.covaMonstre.repBc;
+import static monstre.covaMonstre.solucion;
 
 /**
  *
@@ -205,6 +215,7 @@ public class interfaz extends JFrame implements Runnable {
 
         JButton paso = new JButton("Un paso");
         JCheckBox auto = new JCheckBox("Automático");
+        JButton reset = new JButton("Reset");
 
         paso.addActionListener(
                 new ActionListener() {
@@ -235,6 +246,35 @@ public class interfaz extends JFrame implements Runnable {
         }
         );
 
+        reset.addActionListener(
+                new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e
+            ) {
+                Runnable runnable
+                        = () -> {
+                    try {
+                        covaMonstre c = new covaMonstre();
+                        c.cova = new interfaz(c.espera);
+                        c.pintar = new Thread(c.cova);
+                        c.pintar.start();
+                        c.espera.acquire();
+                        c.repBc = c.cova.mapa;
+                        c.datos = c.cova.getDatos();
+                        while (!c.solucion(0, 0)) {
+                            c.bc.visitades = new ArrayList();
+                        }
+                        c.pintar.join();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(interfaz.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                        };
+                Thread novaCova = new Thread(runnable);
+                novaCova.start();
+            }
+        }
+        );
+
         JButton mostraBC = new JButton("Mostra mapa");
         JPanel modo = new JPanel();
 
@@ -247,6 +287,8 @@ public class interfaz extends JFrame implements Runnable {
         modo.add(paso);
 
         modo.add(auto);
+
+        modo.add(reset);
 
         interaccion.add(modo);
 
@@ -304,6 +346,5 @@ public class interfaz extends JFrame implements Runnable {
 
     @Override
     public void run() {
-
     }
 }
