@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 public class BC {
 
-    public ArrayList<Habitacio> visitades;
+    ArrayList<Habitacio> visitades;
     public HashMap<Point, Habitacio> bc1;
     ArrayList<OR> bc2;
     //coordenadas X e Y relativas del agente

@@ -13,6 +13,8 @@ import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -29,7 +31,6 @@ public class Habitacio extends JPanel {
     private Tipus precipici;
     private Tipus resplandor;
     private Rectangle2D.Float rec;
-    private Color color;
     private sprite sprite;
     boolean bc = false;
     private int i;
@@ -37,6 +38,7 @@ public class Habitacio extends JPanel {
 
     private int size = 0;
     private Image img;
+    private Image imgDirt;
 
     public Habitacio(Tipus hedor, Tipus brisa, Tipus monstre, Tipus precipici, Tipus resplandor, Rectangle2D.Float rec) {
         this.hedor = hedor;
@@ -46,6 +48,12 @@ public class Habitacio extends JPanel {
         this.resplandor = resplandor;
         this.rec = rec;
         this.sprite = null;
+        
+        try {
+            imgDirt = ImageIO.read(new File("media/ground.jpg"));
+        } catch (IOException ex) {
+            Logger.getLogger(Habitacio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public Habitacio(Tipus hedor, Tipus brisa, Tipus monstre, Tipus precipici, Tipus resplandor, boolean bc) {
@@ -86,10 +94,6 @@ public class Habitacio extends JPanel {
 
     public void setSprite() {
         this.sprite = null;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     public Rectangle2D.Float getRec() {
@@ -147,8 +151,7 @@ public class Habitacio extends JPanel {
     public void paint(Graphics g) {
         //super.paint(g);
         img = null;
-        g.setColor(color);
-        g.fillRect(0, 0, size, size);
+        g.drawImage(imgDirt, calculatePos(0.05), calculatePos(0.05), size, size, null);
         try {
             if (!this.isAgente() && this.resplandor != Tipus.SI) {
                 if (this.hedor == Tipus.SI) {
@@ -210,8 +213,10 @@ public class Habitacio extends JPanel {
                     if (monstre == Tipus.BUIT && precipici == Tipus.BUIT) {
                         this.setBackground(Color.BLACK);
                     } else {
-                        this.setBackground(color);
+                        this.setBackground(new Color(100,65,23));
                     }
+                    g.setColor(new Color(100,65,23));
+                    g.fillRect(0, 0, size, size);
                     if (monstre != Tipus.BUIT) {
                         g.setColor(Color.BLACK);
                         aux1 = " M -> " + monstre;
@@ -263,6 +268,11 @@ public class Habitacio extends JPanel {
     private int calculatePos() {
         return (int) Math.ceil((this.size - calculateSize(0.25)) / 2);
     }
+    
+    private int calculatePos(double percent) {
+        return (int) Math.ceil((this.size - calculateSize(percent)) / 2);
+    }
+
 
     public String getInfo() {
         return "    hedor =" + hedor + "\n    brisa = " + brisa + "\n    monstre = " + monstre + "\n    precipici = " + precipici + "    resplandor = " + resplandor + "\n";

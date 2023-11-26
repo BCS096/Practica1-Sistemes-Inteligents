@@ -56,20 +56,10 @@ public class Bc extends JFrame{
                 cova[i][j].setOpaque(true);
                 cova[i][j].setSize(new Dimension(xC, yC));
                 cova[i][j].setVisible(true);
-                paintCasillas(cova[i][j], i, j);
                 this.add(cova[i][j]);
             }
 
         }
-    }
-
-    private void paintCasillas(Habitacio casilla, int x, int y) {
-        if ((y + x + 1) % 2 == 0) {
-            casilla.setColor(new Color(165, 138, 138));
-        } else {
-            casilla.setColor(new Color(158, 158, 158));
-        }
-
     }
 
     @Override

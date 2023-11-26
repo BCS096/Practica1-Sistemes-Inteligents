@@ -27,15 +27,12 @@ import javax.swing.JPanel;
  *
  * @author emanu
  */
-public class tablero extends JPanel implements MouseListener, Notify {
+public final class tablero extends JPanel implements MouseListener, Notify {
 
-    private int xC;
-    private int yC;
-    private final Dimension sizeFrame = new Dimension(512, 512);
-    private data datos;
-    private Semaphore espera;
-    private int currentX = 0;
-    private int currentY = 0;
+    private final int xC;
+    private final int yC;
+    private final data datos;
+    private final Semaphore espera;
     public int timer = 500;
     public static Semaphore mutex = new Semaphore(1);
 
@@ -64,22 +61,12 @@ public class tablero extends JPanel implements MouseListener, Notify {
                 datos.cova[i][j].setHabitacio(xC);
                 datos.cova[i][j].setOpaque(true);
                 datos.cova[i][j].setSize(new Dimension(xC, yC));
-                paintCasillas(datos.cova[i][j], i, j);
                 this.add(datos.cova[i][j]);
                 x += xC;
             }
             y += xC;
         }
         this.repaint();
-    }
-
-    private void paintCasillas(Habitacio casilla, int x, int y) {
-        if ((y + x + 1) % 2 == 0) {
-            casilla.setColor(new Color(165, 138, 138));
-
-        } else {
-            casilla.setColor(new Color(158, 158, 158));
-        }
     }
 
     @Override
@@ -278,7 +265,7 @@ public class tablero extends JPanel implements MouseListener, Notify {
             //Remove null room
             camino.remove(index + 1);
         }
-        //As whe postincrement, we have the wrong index by 1, removing consulted valid room
+        //As we postincrement, we have the wrong index by 1, removing consulted valid room
         camino.remove(++index);
         return result;
     }

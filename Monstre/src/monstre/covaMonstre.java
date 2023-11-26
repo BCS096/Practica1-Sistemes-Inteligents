@@ -22,20 +22,19 @@ import java.util.concurrent.Semaphore;
  */
 public class covaMonstre {
 
-    public static Semaphore espera = new Semaphore(0);
-    public static data datos;
-    public static BC bc = new BC();
-    public static interfaz cova;
+    static Semaphore espera = new Semaphore(0);
+    static data datos;
+    static BC bc = new BC();
+    static interfaz cova;
     public static Semaphore step = new Semaphore(1);
-    public static Bc repBc;
+    static Bc repBc;
     public static Semaphore pasito = new Semaphore(0);
     public static boolean automatic = false;
     private static final boolean DEBUG = false;
-    public static Thread pintar;
 
     public static void main(String[] args) throws InterruptedException {
         cova = new interfaz(espera);
-        pintar = new Thread(cova);
+        Thread pintar = new Thread(cova);
         pintar.start();
         espera.acquire();
         repBc = cova.mapa;
@@ -44,7 +43,19 @@ public class covaMonstre {
             bc.visitades = new ArrayList();
         }
         pintar.join();
-
+    }
+    
+    public static void reset() throws InterruptedException {
+        // Reiniciamos los semáforos
+        espera = new Semaphore(0);
+        step = new Semaphore(1);
+        pasito = new Semaphore(0);
+        
+        repBc = cova.mapa;
+        datos = cova.getDatos();
+        while (!solucion(0, 0)) {
+            bc.visitades = new ArrayList();
+        }
     }
 
     public static boolean solucion(int x, int y) throws InterruptedException {
