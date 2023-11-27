@@ -20,7 +20,7 @@ import monstre.BC;
  *
  * @author tomeu
  */
-public class Bc extends JFrame{
+public final class Bc extends JFrame{
     private int xC;
     private int yC;
     private final Dimension sizeFrame = new Dimension(512, 512);
